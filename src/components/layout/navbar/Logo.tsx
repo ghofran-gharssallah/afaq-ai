@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 import logo from "../../../assets/logo/logo.png";
 import { EASE_OUT_EXPO, EASE_OUT_QUINT, IDLE } from "../../../constants/motion";
@@ -39,8 +40,8 @@ const Logo = () => {
   const [hovered, setHovered] = useState(false);
 
   return (
-    <a
-      href="#home"
+    <Link
+      to="/"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onFocus={() => setHovered(true)}
@@ -276,7 +277,7 @@ const Logo = () => {
 
         <span className="mx-2 text-[#A47CED]">AI</span>
       </motion.span>
-    </a>
+    </Link>
   );
 };
 

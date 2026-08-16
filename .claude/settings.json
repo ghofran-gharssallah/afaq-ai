@@ -15,7 +15,14 @@
       "Bash(node navcta.js)",
       "Bash(node mobilenav.js)",
       "Bash(node csscheck.js)",
-      "Bash(powershell -Command \"Test-Path 'c:\\\\Users\\\\INFOKOM\\\\afaq-ai\\\\.env.example'; Test-Path 'c:\\\\Users\\\\INFOKOM\\\\afaq-ai\\\\.env'\")"
+      "Bash(powershell -Command \"Test-Path 'c:\\\\Users\\\\INFOKOM\\\\afaq-ai\\\\.env.example'; Test-Path 'c:\\\\Users\\\\INFOKOM\\\\afaq-ai\\\\.env'\")",
+      "Bash(mkdir -p \"c:/Users/INFOKOM/afaq-ai/src/components/layout/Layout\" \"c:/Users/INFOKOM/afaq-ai/src/pages/Home\" \"c:/Users/INFOKOM/afaq-ai/src/pages/Services\" \"c:/Users/INFOKOM/afaq-ai/src/pages/About\" \"c:/Users/INFOKOM/afaq-ai/src/pages/Projects\" \"c:/Users/INFOKOM/afaq-ai/src/pages/Contact\")",
+      "Bash(npx tsc *)",
+      "Bash(npm run *)",
+      "Bash(npx vite *)"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\INFOKOM\\afaq-ai\\src\\components\\layout"
     ]
   }
 }

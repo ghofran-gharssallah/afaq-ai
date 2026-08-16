@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { CalendarDays, Check, X } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 import logo from "../../../assets/logo/logo.png";
 import { EASE_OUT_EXPO } from "../../../constants/motion";
@@ -24,10 +25,10 @@ const PrimaryButton = ({
   onClick,
 }: {
   children: React.ReactNode;
-  onClick?: React.MouseEventHandler<HTMLAnchorElement>;
+  onClick?: () => void;
 }) => (
-  <a
-    href="#contact"
+  <Link
+    to="/contact"
     onClick={onClick}
     className="group relative inline-flex h-[44px] min-w-[184px] items-center justify-center gap-2.5 overflow-hidden rounded-full px-[32px] transition-all duration-300 ease-out hover:scale-[1.03]"
   >
@@ -39,7 +40,7 @@ const PrimaryButton = ({
     <span className="relative z-10 whitespace-nowrap text-[14.5px] font-semibold tracking-[-0.01em] text-white drop-shadow-[0_0_4px_rgba(255,255,255,.15)] transition-all duration-300 group-hover:drop-shadow-[0_0_8px_rgba(255,255,255,.35)]">
       {children}
     </span>
-  </a>
+  </Link>
 );
 
 /** Section label — one definition for every block in the body. */
@@ -68,25 +69,6 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
   const panelRef = useRef<HTMLDivElement>(null);
   const restoreRef = useRef<HTMLElement | null>(null);
   const open = Boolean(project);
-
-  /**
-   * Closes the modal and hands off to the native "#contact" anchor jump —
-   * but the modal locks html/body scroll while open, so a same-tick jump
-   * would land while the page still can't move. Waiting a frame lets the
-   * close effect's cleanup restore scrolling first.
-   */
-  const goToContact = useCallback(
-    (e: React.MouseEvent<HTMLAnchorElement>) => {
-      e.preventDefault();
-      onClose();
-      requestAnimationFrame(() => {
-        document
-          .getElementById("contact")
-          ?.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
-      });
-    },
-    [onClose, reduced]
-  );
 
   const onKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -310,7 +292,7 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
 
               {/* ── Footer ─────────────────────────────────── */}
               <div className="relative flex flex-col gap-3 border-t border-white/[0.07] px-6 py-6 sm:flex-row sm:items-center sm:gap-4 sm:px-9">
-                <PrimaryButton onClick={goToContact}>
+                <PrimaryButton onClick={onClose}>
                   Start a Project
                 </PrimaryButton>
                 <p className="text-[12.5px] leading-[1.6] text-white/35">

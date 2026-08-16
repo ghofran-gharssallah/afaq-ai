@@ -65,10 +65,10 @@ const SecondaryButton = ({
   onClick,
 }: {
   children: React.ReactNode;
-  onClick?: React.MouseEventHandler<HTMLAnchorElement>;
+  onClick?: () => void;
 }) => (
-  <a
-    href="#services"
+  <button
+    type="button"
     onClick={onClick}
     className="
       group inline-flex h-[44px] min-w-[180px] items-center justify-center gap-3
@@ -82,7 +82,7 @@ const SecondaryButton = ({
     <span className="transition-[translate] duration-300 group-hover:translate-x-1">
       →
     </span>
-  </a>
+  </button>
 );
 
 /* ========================================================== */
@@ -99,25 +99,6 @@ const ServiceModal = ({ service, onClose }: ServiceModalProps) => {
   const restoreRef = useRef<HTMLElement | null>(null);
 
   const open = Boolean(service);
-
-  /**
-   * Closes the modal and hands off to the native "#services" anchor jump —
-   * but the modal locks html/body scroll while open, so a same-tick jump
-   * would land while the page still can't move. Waiting a frame lets the
-   * close effect's cleanup restore scrolling first.
-   */
-  const goToServices = useCallback(
-    (e: React.MouseEvent<HTMLAnchorElement>) => {
-      e.preventDefault();
-      onClose();
-      requestAnimationFrame(() => {
-        document
-          .getElementById("services")
-          ?.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
-      });
-    },
-    [onClose, reduced]
-  );
 
   /** ESC to close, and a Tab loop so focus cannot escape the dialog. */
   const onKeyDown = useCallback(
@@ -328,7 +309,7 @@ const ServiceModal = ({ service, onClose }: ServiceModalProps) => {
               {/* ── Footer ─────────────────────────────────── */}
               <div className="relative flex flex-col gap-3 border-t border-white/[0.07] px-6 py-6 sm:flex-row sm:items-center sm:gap-4 sm:px-9">
                 <PrimaryButton>Book a Call</PrimaryButton>
-                <SecondaryButton onClick={goToServices}>
+                <SecondaryButton onClick={onClose}>
                   View Services
                 </SecondaryButton>
               </div>

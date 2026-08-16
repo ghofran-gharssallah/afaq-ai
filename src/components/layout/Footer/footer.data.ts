@@ -22,7 +22,12 @@ export const EMAIL = "";
 
 export interface FooterLink {
   label: string;
-  /** In-page anchor — every one of these section ids exists in App.tsx. */
+  /**
+   * A route path, optionally with a `#section` hash for a destination that
+   * lives partway down a page rather than at its top (e.g. the About page's
+   * Why Choose AFAQ / Our Process sub-sections). Passed straight to
+   * React Router's `<Link to>`.
+   */
   href: string;
 }
 
@@ -32,25 +37,26 @@ export interface FooterGroup {
 }
 
 /**
- * Only real, in-page destinations. There is no router mounted and
- * `src/pages` / `src/routes` are empty, so no Privacy or Terms links are
- * included — they would 404.
+ * Only real destinations — every route below is registered in App.tsx, and
+ * every hash target is a section id that exists on the page it points into.
+ * No Privacy or Terms links are included since those pages don't exist —
+ * they would 404.
  */
 export const FOOTER_NAV: FooterGroup[] = [
   {
     heading: "Company",
     links: [
-      { label: "About", href: "#about" },
-      { label: "Why Choose AFAQ", href: "#why-choose" },
-      { label: "Our Process", href: "#process" },
+      { label: "About", href: "/about" },
+      { label: "Why Choose AFAQ", href: "/about#why-choose" },
+      { label: "Our Process", href: "/about#process" },
     ],
   },
   {
     heading: "Explore",
     links: [
-      { label: "Services", href: "#services" },
-      { label: "Technologies", href: "#technologies" },
-      { label: "Featured Projects", href: "#projects" },
+      { label: "Services", href: "/services" },
+      { label: "Technologies", href: "/#technologies" },
+      { label: "Featured Projects", href: "/projects" },
     ],
   },
 ];

@@ -1,25 +1,25 @@
 export const leftLinks = [
   {
     label: "Home",
-    href: "#home",
+    href: "/",
   },
   {
     label: "Services",
-    href: "#services",
+    href: "/services",
   },
   {
     label: "About",
-    href: "#about",
+    href: "/about",
   },
 ];
 
 export const rightLinks = [
   {
     label: "Projects",
-    href: "#projects",
+    href: "/projects",
   },
   {
     label: "Contact",
-    href: "#contact",
+    href: "/contact",
   },
 ];

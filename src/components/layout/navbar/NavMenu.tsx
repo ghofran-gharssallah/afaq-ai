@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import { motion, useReducedMotion } from "framer-motion";
+import { NavLink } from "react-router-dom";
 
 import { leftLinks, rightLinks } from "../../../constants/navigation";
 import { D, EASE_OUT_EXPO, T } from "../../../constants/motion";
@@ -34,16 +35,19 @@ const NavMenu = ({ side }: NavMenuProps) => {
             ease: EASE_OUT_EXPO,
           }}
         >
-          <a
-            href={link.href}
+          <NavLink
+            to={link.href}
+            end={link.href === "/"}
             aria-label={link.label}
-            className={clsx(
-              "nav-link whitespace-nowrap transition-all duration-300",
-              side === "left" && index === 0 && "active"
-            )}
+            className={({ isActive }) =>
+              clsx(
+                "nav-link whitespace-nowrap transition-all duration-300",
+                isActive && "active"
+              )
+            }
           >
             {link.label}
-          </a>
+          </NavLink>
         </motion.li>
       ))}
     </ul>

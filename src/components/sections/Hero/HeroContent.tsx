@@ -1,4 +1,5 @@
 import { motion, useReducedMotion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 import {
   D,
@@ -365,8 +366,8 @@ const HeroContent = () => {
               ease: EASE_OUT_EXPO,
             }}
           >
-            <a
-              href="#services"
+            <Link
+              to="/services"
               className="
                 group
 
@@ -417,7 +418,7 @@ const HeroContent = () => {
               >
                 →
               </span>
-            </a>
+            </Link>
           </motion.div>
         </div>
       </div>

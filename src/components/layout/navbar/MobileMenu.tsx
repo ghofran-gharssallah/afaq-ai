@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import clsx from "clsx";
 import { Menu, X } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { NavLink } from "react-router-dom";
 
 import Logo from "./Logo";
 import CTAButton from "./CTAButton";
@@ -185,42 +187,43 @@ const MobileMenu = () => {
                     <ul className="relative flex flex-col gap-1">
                       {links.map((link) => (
                         <li key={link.href}>
-                          <a
-                            href={link.href}
+                          <NavLink
+                            to={link.href}
+                            end={link.href === "/"}
                             onClick={close}
-                            className="
-                              flex
-                              items-center
+                            className={({ isActive }) =>
+                              clsx(
+                                `
+                                  flex
+                                  items-center
 
-                              rounded-xl
+                                  rounded-xl
 
-                              border
-                              border-transparent
+                                  border
 
-                              px-4
-                              py-3.5
+                                  px-4
+                                  py-3.5
 
-                              font-['Space_Grotesk']
-                              text-[15px]
-                              font-medium
+                                  font-['Space_Grotesk']
+                                  text-[15px]
+                                  font-medium
 
-                              text-white/70
+                                  outline-none
+                                  transition-all
+                                  duration-300
 
-                              outline-none
-                              transition-all
-                              duration-300
-
-                              hover:border-white/10
-                              hover:bg-white/5
-                              hover:text-white
-
-                              focus-visible:border-violet-400/30
-                              focus-visible:bg-white/5
-                              focus-visible:text-white
-                            "
+                                  focus-visible:border-violet-400/30
+                                  focus-visible:bg-white/5
+                                  focus-visible:text-white
+                                `,
+                                isActive
+                                  ? "border-white/10 bg-white/5 text-white"
+                                  : "border-transparent text-white/70 hover:border-white/10 hover:bg-white/5 hover:text-white"
+                              )
+                            }
                           >
                             {link.label}
-                          </a>
+                          </NavLink>
                         </li>
                       ))}
                     </ul>

@@ -1,5 +1,6 @@
 import { ArrowUp, CalendarDays, Mail, Send } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 import logo from "../../../assets/logo/logo.png";
 import { EASE_OUT_QUINT } from "../../../constants/motion";
@@ -41,8 +42,8 @@ const PrimaryLink = ({
   icon: React.ReactNode;
   children: React.ReactNode;
 }) => (
-  <a
-    href={href}
+  <Link
+    to={href}
     className="
       group relative inline-flex h-[48px] min-w-[196px] items-center justify-center gap-2.5
       overflow-hidden rounded-full px-[34px] outline-none
@@ -59,7 +60,7 @@ const PrimaryLink = ({
     <span className="relative z-10 whitespace-nowrap text-[15px] font-semibold tracking-[-0.01em] text-white drop-shadow-[0_0_4px_rgba(255,255,255,.15)]">
       {children}
     </span>
-  </a>
+  </Link>
 );
 
 /** The site's outlined glass secondary. */
@@ -174,7 +175,7 @@ const Footer = () => {
 
           <div className="mt-11 flex flex-col items-center gap-4 sm:flex-row sm:gap-5">
             <PrimaryLink
-              href="#contact"
+              href="/contact"
               icon={<Send size={15} strokeWidth={2.2} aria-hidden />}
             >
               Start a Project
@@ -204,9 +205,9 @@ const Footer = () => {
         >
           {/* Brand */}
           <div className="lg:col-span-5">
-            <a
-              href="#home"
-              aria-label="AFAQ AI — back to top"
+            <Link
+              to="/"
+              aria-label="AFAQ AI — home"
               className="inline-flex items-center gap-3 outline-none focus-visible:ring-2 focus-visible:ring-violet-400/60 rounded-xl"
             >
               <img
@@ -219,7 +220,7 @@ const Footer = () => {
               <span className="font-['Space_Grotesk'] text-[15px] font-medium uppercase tracking-[0.28em] leading-none text-white">
                 Afaq<span className="ml-2 text-[#A47CED]">AI</span>
               </span>
-            </a>
+            </Link>
 
             <p className="mt-6 max-w-[340px] text-[14px] leading-[1.8] text-white/50">
               Building intelligent systems, AI-powered products and digital
@@ -240,9 +241,9 @@ const Footer = () => {
               <ul className="mt-5 flex flex-col gap-3.5">
                 {group.links.map((link) => (
                   <li key={link.href}>
-                    <a href={link.href} className={LINK}>
+                    <Link to={link.href} className={LINK}>
                       {link.label}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -265,10 +266,10 @@ const Footer = () => {
                   {EMAIL}
                 </a>
               ) : (
-                <a href="#contact" className={`inline-flex items-center gap-2.5 ${LINK}`}>
+                <Link to="/contact" className={`inline-flex items-center gap-2.5 ${LINK}`}>
                   <Mail size={15} strokeWidth={1.8} aria-hidden className="shrink-0 text-violet-300/70" />
                   Send us a message
-                </a>
+                </Link>
               )}
 
               {socials.length > 0 && (
@@ -322,8 +323,11 @@ const Footer = () => {
             © 2026 AFAQ AI. All rights reserved.
           </p>
 
-          <a
-            href="#home"
+          <button
+            type="button"
+            onClick={() =>
+              window.scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" })
+            }
             className="
               group inline-flex items-center gap-2 rounded-full
               text-[12.5px] text-white/35 outline-none
@@ -339,7 +343,7 @@ const Footer = () => {
               aria-hidden
               className="transition-[translate] duration-300 group-hover:-translate-y-[2px]"
             />
-          </a>
+          </button>
         </div>
       </div>
     </footer>
