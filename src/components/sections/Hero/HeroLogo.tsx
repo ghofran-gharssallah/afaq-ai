@@ -4,6 +4,7 @@ import {
   motion,
   useReducedMotion,
   useScroll,
+  useSpring,
   useTransform,
 } from "framer-motion";
 import { BrainCircuit, Bot, Cpu, Sparkles, Workflow } from "lucide-react";
@@ -373,7 +374,7 @@ const logoMask: React.CSSProperties = {
  * Scroll recede tuning, expressed in viewport heights so the transition covers
  * the same visual distance on any screen.
  */
-const RECEDE = {
+const RECEDE_DESKTOP = {
   /**
    * Scroll distance over which the composition settles into the background,
    * in viewport heights. Kept under 1vh so the recede is complete by the time
@@ -392,6 +393,33 @@ const RECEDE = {
   blur: 6.5,
   opacity: 0.38,
 } as const;
+
+/**
+ * Mobile plays the same recede — same direction, same depth relationship,
+ * same 0.62 scale floor — over a shorter scroll distance and with lighter
+ * visual weight: less drift, less blur, a shallower fade. The heavy desktop
+ * version read as slow and dramatic when squeezed onto a phone; this keeps
+ * the concept but makes it quick and easy on the eyes.
+ */
+const RECEDE_MOBILE = {
+  span: 0.55,
+  lift: 0.05,
+  scale: 0.62,
+  blur: 3.5,
+  opacity: 0.5,
+} as const;
+
+/**
+ * Smooths the mobile recede so it reads as one fluid, controlled motion
+ * instead of snapping 1:1 to every pixel of scroll/touch input — desktop
+ * keeps reading the raw scroll-coupled values below, untouched. `bounce: 0`
+ * is a critically-damped spring: quick response, no overshoot, settles in
+ * ~500ms regardless of how fast the scroll input itself changes.
+ */
+const MOBILE_SPRING = { duration: 0.5, bounce: 0 } as const;
+
+/** Below this, the recede uses the mobile tuning above. */
+const MOBILE_BREAKPOINT = 640;
 
 const HeroLogo = () => {
   const reduced = useReducedMotion() ?? false;
@@ -453,6 +481,8 @@ const HeroLogo = () => {
   }, []);
 
   const vh = vp.h;
+  const isMobile = vp.w < MOBILE_BREAKPOINT;
+  const RECEDE = isMobile ? RECEDE_MOBILE : RECEDE_DESKTOP;
 
   /**
    * The span is capped at the distance the page can actually scroll. On a tall
@@ -486,10 +516,10 @@ const HeroLogo = () => {
   // it scrolls away with the rest of the Hero exactly like ordinary content,
   // and reverses smoothly on the way back up since it's a pure function of
   // scrollY with no one-shot state.
-  const y = useTransform(scrollY, [0, end], [0, end - lift]);
-  const x = useTransform(scrollY, [0, end], [0, centreShift]);
-  const scale = useTransform(scrollY, [0, end], [1, RECEDE.scale]);
-  const opacity = useTransform(
+  const rawY = useTransform(scrollY, [0, end], [0, end - lift]);
+  const rawX = useTransform(scrollY, [0, end], [0, centreShift]);
+  const rawScale = useTransform(scrollY, [0, end], [1, RECEDE.scale]);
+  const rawOpacity = useTransform(
     scrollY,
     [0, end * 0.4, end],
     [1, 0.8, RECEDE.opacity]
@@ -499,7 +529,24 @@ const HeroLogo = () => {
   // forces a fresh rasterisation every frame, whereas stepping it lets the
   // compositor reuse the previous raster across most frames. At this radius
   // the steps are not perceptible.
-  const blur = useTransform(scrollY, [0, end], [0, RECEDE.blur]);
+  const rawBlur = useTransform(scrollY, [0, end], [0, RECEDE.blur]);
+
+  // Springs must be called unconditionally (rules of hooks), but only their
+  // output is actually read on mobile — desktop selects the raw values
+  // below and never sees the spring, so its motion is byte-for-byte what it
+  // was before this existed.
+  const springY = useSpring(rawY, MOBILE_SPRING);
+  const springX = useSpring(rawX, MOBILE_SPRING);
+  const springScale = useSpring(rawScale, MOBILE_SPRING);
+  const springOpacity = useSpring(rawOpacity, MOBILE_SPRING);
+  const springBlur = useSpring(rawBlur, MOBILE_SPRING);
+
+  const y = isMobile ? springY : rawY;
+  const x = isMobile ? springX : rawX;
+  const scale = isMobile ? springScale : rawScale;
+  const opacity = isMobile ? springOpacity : rawOpacity;
+  const blur = isMobile ? springBlur : rawBlur;
+
   const filter = useTransform(
     blur,
     (b) => `blur(${(Math.round(b * 2) / 2).toFixed(1)}px)`
