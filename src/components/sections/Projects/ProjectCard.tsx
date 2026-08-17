@@ -3,6 +3,7 @@ import { ArrowUpRight } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 
 import { EASE_OUT_EXPO, EASE_OUT_QUINT } from "../../../constants/motion";
+import { useIsMobile } from "../../../hooks/useIsMobile";
 import ProjectCover from "./ProjectCover";
 import type { Project } from "./projects.data";
 
@@ -50,6 +51,7 @@ interface ProjectCardProps {
 const ProjectCard = ({ project, index, onOpen }: ProjectCardProps) => {
   const { variant, index: numeral, category, title, description, tech } = project;
   const reduced = useReducedMotion() ?? false;
+  const isMobile = useIsMobile();
   const ref = useRef<HTMLDivElement>(null);
   const split = variant === "split";
 
@@ -147,16 +149,24 @@ const ProjectCard = ({ project, index, onOpen }: ProjectCardProps) => {
       onPointerMove={handlePointerMove}
       className="group relative"
       initial={
-        reduced ? { opacity: 0 } : { opacity: 0, y: 30, filter: "blur(8px)" }
+        reduced
+          ? { opacity: 0 }
+          : isMobile
+          ? { opacity: 0, y: 16 }
+          : { opacity: 0, y: 30, filter: "blur(8px)" }
       }
       whileInView={
-        reduced ? { opacity: 1 } : { opacity: 1, y: 0, filter: "blur(0px)" }
+        reduced
+          ? { opacity: 1 }
+          : isMobile
+          ? { opacity: 1, y: 0 }
+          : { opacity: 1, y: 0, filter: "blur(0px)" }
       }
       viewport={{ once: true, margin: "-80px" }}
       whileHover={reduced ? undefined : { y: -6 }}
       transition={{
-        duration: reduced ? 0.3 : 0.75,
-        delay: reduced ? 0 : index * 0.12,
+        duration: reduced ? 0.3 : isMobile ? 0.45 : 0.75,
+        delay: reduced ? 0 : isMobile ? index * 0.06 : index * 0.12,
         ease: EASE_OUT_QUINT,
         y: { duration: 0.45, ease: EASE_OUT_EXPO },
       }}

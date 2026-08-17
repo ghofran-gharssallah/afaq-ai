@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 
 import logo from "../../../assets/logo/logo.png";
 import { EASE_OUT_EXPO } from "../../../constants/motion";
+import { useIsMobile } from "../../../hooks/useIsMobile";
 import ProjectCover from "./ProjectCover";
 import type { Project } from "./projects.data";
 
@@ -66,6 +67,7 @@ interface ProjectModalProps {
 
 const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
   const reduced = useReducedMotion() ?? false;
+  const isMobile = useIsMobile();
   const panelRef = useRef<HTMLDivElement>(null);
   const restoreRef = useRef<HTMLElement | null>(null);
   const open = Boolean(project);
@@ -134,7 +136,10 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: reduced ? 0.15 : 0.35, ease: "easeOut" }}
+            transition={{
+              duration: reduced ? 0.15 : isMobile ? 0.24 : 0.35,
+              ease: "easeOut",
+            }}
             onClick={onClose}
           />
 
@@ -148,19 +153,28 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
             initial={
               reduced
                 ? { opacity: 0 }
+                : isMobile
+                ? { opacity: 0, scale: 0.98, y: 10 }
                 : { opacity: 0, scale: 0.96, y: 14, filter: "blur(10px)" }
             }
             animate={
               reduced
                 ? { opacity: 1 }
+                : isMobile
+                ? { opacity: 1, scale: 1, y: 0 }
                 : { opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }
             }
             exit={
               reduced
                 ? { opacity: 0 }
+                : isMobile
+                ? { opacity: 0, scale: 0.98, y: 8 }
                 : { opacity: 0, scale: 0.96, y: 10, filter: "blur(10px)" }
             }
-            transition={{ duration: reduced ? 0.15 : 0.44, ease: EASE_OUT_EXPO }}
+            transition={{
+              duration: reduced ? 0.15 : isMobile ? 0.3 : 0.44,
+              ease: EASE_OUT_EXPO,
+            }}
           >
             <div
               aria-hidden

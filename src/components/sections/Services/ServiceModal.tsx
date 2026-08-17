@@ -6,6 +6,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import logo from "../../../assets/logo/logo.png";
 import { EASE_OUT_EXPO } from "../../../constants/motion";
 import { BOOKING_URL } from "../../../config/booking";
+import { useIsMobile } from "../../../hooks/useIsMobile";
 import ServiceDetails from "./ServiceDetails";
 import { SERVICE_DETAILS } from "./serviceDetails.data";
 import type { Service } from "./services.data";
@@ -94,6 +95,7 @@ interface ServiceModalProps {
 
 const ServiceModal = ({ service, onClose }: ServiceModalProps) => {
   const reduced = useReducedMotion() ?? false;
+  const isMobile = useIsMobile();
   const panelRef = useRef<HTMLDivElement>(null);
   /** Element that had focus before opening, restored on close. */
   const restoreRef = useRef<HTMLElement | null>(null);
@@ -176,7 +178,10 @@ const ServiceModal = ({ service, onClose }: ServiceModalProps) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: reduced ? 0.15 : 0.35, ease: "easeOut" }}
+            transition={{
+              duration: reduced ? 0.15 : isMobile ? 0.24 : 0.35,
+              ease: "easeOut",
+            }}
             onClick={onClose}
           />
 
@@ -194,20 +199,26 @@ const ServiceModal = ({ service, onClose }: ServiceModalProps) => {
             initial={
               reduced
                 ? { opacity: 0 }
+                : isMobile
+                ? { opacity: 0, scale: 0.98, y: 10 }
                 : { opacity: 0, scale: 0.96, y: 14, filter: "blur(10px)" }
             }
             animate={
               reduced
                 ? { opacity: 1 }
+                : isMobile
+                ? { opacity: 1, scale: 1, y: 0 }
                 : { opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }
             }
             exit={
               reduced
                 ? { opacity: 0 }
+                : isMobile
+                ? { opacity: 0, scale: 0.98, y: 8 }
                 : { opacity: 0, scale: 0.96, y: 10, filter: "blur(10px)" }
             }
             transition={{
-              duration: reduced ? 0.15 : 0.44,
+              duration: reduced ? 0.15 : isMobile ? 0.3 : 0.44,
               ease: EASE_OUT_EXPO,
             }}
           >

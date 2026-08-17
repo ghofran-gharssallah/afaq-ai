@@ -2,6 +2,7 @@ import { useCallback, useRef } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 
 import { EASE_OUT_EXPO, EASE_OUT_QUINT } from "../../../constants/motion";
+import { useIsMobile } from "../../../hooks/useIsMobile";
 import type { Feature } from "./features.data";
 
 /**
@@ -44,6 +45,7 @@ interface WhyCardProps {
 const WhyCard = ({ feature, index }: WhyCardProps) => {
   const { tier, title, description, detail, id, Icon } = feature;
   const reduced = useReducedMotion() ?? false;
+  const isMobile = useIsMobile();
   const ref = useRef<HTMLDivElement>(null);
 
   /** Cursor spotlight through CSS vars — no state, so hover never re-renders. */
@@ -66,16 +68,24 @@ const WhyCard = ({ feature, index }: WhyCardProps) => {
       onPointerMove={handlePointerMove}
       className="group relative h-full"
       initial={
-        reduced ? { opacity: 0 } : { opacity: 0, y: 24, filter: "blur(7px)" }
+        reduced
+          ? { opacity: 0 }
+          : isMobile
+          ? { opacity: 0, y: 14 }
+          : { opacity: 0, y: 24, filter: "blur(7px)" }
       }
       whileInView={
-        reduced ? { opacity: 1 } : { opacity: 1, y: 0, filter: "blur(0px)" }
+        reduced
+          ? { opacity: 1 }
+          : isMobile
+          ? { opacity: 1, y: 0 }
+          : { opacity: 1, y: 0, filter: "blur(0px)" }
       }
       viewport={{ once: true, margin: "-70px" }}
       whileHover={reduced ? undefined : { y: lift }}
       transition={{
-        duration: reduced ? 0.3 : 0.68,
-        delay: reduced ? 0 : index * 0.07,
+        duration: reduced ? 0.3 : isMobile ? 0.42 : 0.68,
+        delay: reduced ? 0 : isMobile ? index * 0.035 : index * 0.07,
         ease: EASE_OUT_QUINT,
         y: { duration: 0.42, ease: EASE_OUT_EXPO },
       }}

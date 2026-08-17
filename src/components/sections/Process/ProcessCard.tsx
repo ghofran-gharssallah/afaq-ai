@@ -2,6 +2,7 @@ import { useCallback, useRef } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 
 import { EASE_OUT_EXPO, EASE_OUT_QUINT } from "../../../constants/motion";
+import { useIsMobile } from "../../../hooks/useIsMobile";
 import type { ProcessStep } from "./process.data";
 
 /**
@@ -46,6 +47,7 @@ interface ProcessCardProps {
 const ProcessCard = ({ step, index, side }: ProcessCardProps) => {
   const { id, title, description, note, Icon } = step;
   const reduced = useReducedMotion() ?? false;
+  const isMobile = useIsMobile();
   const ref = useRef<HTMLDivElement>(null);
 
   /** Cursor spotlight via CSS vars — no state, so hover never re-renders. */
@@ -68,18 +70,22 @@ const ProcessCard = ({ step, index, side }: ProcessCardProps) => {
       initial={
         reduced
           ? { opacity: 0 }
+          : isMobile
+          ? { opacity: 0, y: 16, x: side === "left" ? 8 : -8 }
           : { opacity: 0, y: 26, x: side === "left" ? 14 : -14, filter: "blur(7px)" }
       }
       whileInView={
         reduced
           ? { opacity: 1 }
+          : isMobile
+          ? { opacity: 1, y: 0, x: 0 }
           : { opacity: 1, y: 0, x: 0, filter: "blur(0px)" }
       }
       viewport={{ once: true, margin: "-80px" }}
       whileHover={reduced ? undefined : { y: -6 }}
       transition={{
-        duration: reduced ? 0.3 : 0.7,
-        delay: reduced ? 0 : index * 0.05,
+        duration: reduced ? 0.3 : isMobile ? 0.45 : 0.7,
+        delay: reduced ? 0 : isMobile ? index * 0.025 : index * 0.05,
         ease: EASE_OUT_QUINT,
         y: { duration: 0.42, ease: EASE_OUT_EXPO },
       }}

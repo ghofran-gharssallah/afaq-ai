@@ -3,6 +3,7 @@ import { ArrowUpRight } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 
 import { EASE_OUT_EXPO, EASE_OUT_QUINT } from "../../../constants/motion";
+import { useIsMobile } from "../../../hooks/useIsMobile";
 import type { TeamMember as Member } from "./team.data";
 
 /**
@@ -94,6 +95,7 @@ interface TeamMemberProps {
 
 const TeamMemberCard = ({ member, index, onOpen }: TeamMemberProps) => {
   const reduced = useReducedMotion() ?? false;
+  const isMobile = useIsMobile();
   const ref = useRef<HTMLDivElement>(null);
   const featured = Boolean(member.featured);
 
@@ -115,16 +117,24 @@ const TeamMemberCard = ({ member, index, onOpen }: TeamMemberProps) => {
       onPointerMove={handlePointerMove}
       className="group relative w-full"
       initial={
-        reduced ? { opacity: 0 } : { opacity: 0, y: 22, filter: "blur(6px)" }
+        reduced
+          ? { opacity: 0 }
+          : isMobile
+          ? { opacity: 0, y: 12 }
+          : { opacity: 0, y: 22, filter: "blur(6px)" }
       }
       whileInView={
-        reduced ? { opacity: 1 } : { opacity: 1, y: 0, filter: "blur(0px)" }
+        reduced
+          ? { opacity: 1 }
+          : isMobile
+          ? { opacity: 1, y: 0 }
+          : { opacity: 1, y: 0, filter: "blur(0px)" }
       }
       viewport={{ once: true, margin: "-70px" }}
       whileHover={reduced ? undefined : { y: -6, scale: 1.02 }}
       transition={{
-        duration: reduced ? 0.3 : 0.68,
-        delay: reduced ? 0 : index * 0.08,
+        duration: reduced ? 0.3 : isMobile ? 0.42 : 0.68,
+        delay: reduced ? 0 : isMobile ? index * 0.04 : index * 0.08,
         ease: EASE_OUT_QUINT,
         y: { duration: 0.42, ease: EASE_OUT_EXPO },
         scale: { duration: 0.42, ease: EASE_OUT_EXPO },

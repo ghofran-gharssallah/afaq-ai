@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 
 import { EASE_OUT_QUINT } from "../../../constants/motion";
+import { useIsMobile } from "../../../hooks/useIsMobile";
 import ProjectCard from "./ProjectCard";
 import ProjectModal from "./ProjectModal";
 import { PROJECTS, type Project } from "./projects.data";
@@ -27,6 +28,7 @@ const Rules = () => (
 
 const Projects = () => {
   const reduced = useReducedMotion() ?? false;
+  const isMobile = useIsMobile();
 
   /** One modal instance, so AnimatePresence has a single mount point. */
   const [active, setActive] = useState<Project | null>(null);
@@ -34,14 +36,22 @@ const Projects = () => {
   const closeProject = useCallback(() => setActive(null), []);
 
   const reveal = (delay: number) => ({
-    initial: reduced ? { opacity: 0 } : { opacity: 0, y: 22, filter: "blur(8px)" },
-    whileInView: reduced
-      ? { opacity: 1 }
-      : { opacity: 1, y: 0, filter: "blur(0px)" },
+    initial:
+      reduced
+        ? { opacity: 0 }
+        : isMobile
+        ? { opacity: 0, y: 14 }
+        : { opacity: 0, y: 22, filter: "blur(8px)" },
+    whileInView:
+      reduced
+        ? { opacity: 1 }
+        : isMobile
+        ? { opacity: 1, y: 0 }
+        : { opacity: 1, y: 0, filter: "blur(0px)" },
     viewport: { once: true, margin: "-80px" } as const,
     transition: {
-      duration: reduced ? 0.3 : 0.7,
-      delay: reduced ? 0 : delay,
+      duration: reduced ? 0.3 : isMobile ? 0.45 : 0.7,
+      delay: reduced ? 0 : isMobile ? delay * 0.5 : delay,
       ease: EASE_OUT_QUINT,
     },
   });

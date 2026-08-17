@@ -2,6 +2,7 @@ import { useCallback, useRef } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 
 import { EASE_OUT_EXPO, EASE_OUT_QUINT } from "../../../constants/motion";
+import { useIsMobile } from "../../../hooks/useIsMobile";
 // Named `technologies.data.ts`, not `technologies.ts`: on a case-insensitive
 // filesystem (Windows/macOS) the latter would shadow this folder's
 // `Technologies.tsx`, since TS resolves `./Technologies` to `.ts` before `.tsx`.
@@ -114,6 +115,7 @@ interface TechnologyCardProps {
 
 const TechnologyCard = ({ tech, index }: TechnologyCardProps) => {
   const reduced = useReducedMotion() ?? false;
+  const isMobile = useIsMobile();
   const ref = useRef<HTMLDivElement>(null);
 
   /**
@@ -134,15 +136,25 @@ const TechnologyCard = ({ tech, index }: TechnologyCardProps) => {
       ref={ref}
       onPointerMove={handlePointerMove}
       className="group relative h-[128px] sm:h-[140px] lg:h-[148px]"
-      initial={reduced ? { opacity: 0 } : { opacity: 0, y: 18, filter: "blur(6px)" }}
+      initial={
+        reduced
+          ? { opacity: 0 }
+          : isMobile
+          ? { opacity: 0, y: 10 }
+          : { opacity: 0, y: 18, filter: "blur(6px)" }
+      }
       whileInView={
-        reduced ? { opacity: 1 } : { opacity: 1, y: 0, filter: "blur(0px)" }
+        reduced
+          ? { opacity: 1 }
+          : isMobile
+          ? { opacity: 1, y: 0 }
+          : { opacity: 1, y: 0, filter: "blur(0px)" }
       }
       viewport={{ once: true, margin: "-60px" }}
       whileHover={reduced ? undefined : { y: -6, scale: 1.025 }}
       transition={{
-        duration: reduced ? 0.3 : 0.62,
-        delay: reduced ? 0 : index * 0.055,
+        duration: reduced ? 0.3 : isMobile ? 0.4 : 0.62,
+        delay: reduced ? 0 : isMobile ? index * 0.025 : index * 0.055,
         ease: EASE_OUT_QUINT,
         y: { duration: 0.42, ease: EASE_OUT_EXPO },
         scale: { duration: 0.42, ease: EASE_OUT_EXPO },

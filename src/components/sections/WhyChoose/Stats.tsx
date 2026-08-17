@@ -9,6 +9,7 @@ import {
 } from "framer-motion";
 
 import { EASE_OUT_EXPO } from "../../../constants/motion";
+import { useIsMobile } from "../../../hooks/useIsMobile";
 import { STATS, type Stat } from "./features.data";
 
 /**
@@ -48,6 +49,7 @@ const Counter = ({ stat, play }: { stat: Stat; play: boolean }) => {
 
 const Stats = () => {
   const reduced = useReducedMotion() ?? false;
+  const isMobile = useIsMobile();
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
@@ -60,12 +62,25 @@ const Stats = () => {
         bg-white/[0.03] backdrop-blur-xl
         shadow-[0_14px_44px_rgba(6,4,18,.36)]
       "
-      initial={reduced ? { opacity: 0 } : { opacity: 0, y: 26, filter: "blur(8px)" }}
+      initial={
+        reduced
+          ? { opacity: 0 }
+          : isMobile
+          ? { opacity: 0, y: 14 }
+          : { opacity: 0, y: 26, filter: "blur(8px)" }
+      }
       whileInView={
-        reduced ? { opacity: 1 } : { opacity: 1, y: 0, filter: "blur(0px)" }
+        reduced
+          ? { opacity: 1 }
+          : isMobile
+          ? { opacity: 1, y: 0 }
+          : { opacity: 1, y: 0, filter: "blur(0px)" }
       }
       viewport={{ once: true, margin: "-70px" }}
-      transition={{ duration: reduced ? 0.3 : 0.75, ease: EASE_OUT_EXPO }}
+      transition={{
+        duration: reduced ? 0.3 : isMobile ? 0.45 : 0.75,
+        ease: EASE_OUT_EXPO,
+      }}
     >
       {/* Interior key light + top edge highlight, matching the cards */}
       <span

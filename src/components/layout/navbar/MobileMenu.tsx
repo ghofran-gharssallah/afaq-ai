@@ -9,6 +9,7 @@ import Logo from "./Logo";
 import CTAButton from "./CTAButton";
 import { leftLinks, rightLinks } from "../../../constants/navigation";
 import { EASE_OUT_EXPO } from "../../../constants/motion";
+import { useIsMobile } from "../../../hooks/useIsMobile";
 
 /** Same left-to-right order the desktop bar renders, just stacked. */
 const links = [...leftLinks, ...rightLinks];
@@ -23,6 +24,7 @@ const links = [...leftLinks, ...rightLinks];
 const MobileMenu = () => {
   const [open, setOpen] = useState(false);
   const reduced = useReducedMotion() ?? false;
+  const isMobile = useIsMobile();
 
   const close = useCallback(() => setOpen(false), []);
 
@@ -142,12 +144,19 @@ const MobileMenu = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: reduced ? 0.15 : 0.3, ease: "easeOut" }}
+                  transition={{
+                    duration: reduced ? 0.15 : isMobile ? 0.22 : 0.3,
+                    ease: "easeOut",
+                  }}
                   onClick={close}
                   aria-hidden
                 />
 
-                {/* Panel */}
+                {/* Panel — the blur-to-sharp filter is dropped on mobile only:
+                    animating `filter` forces a repaint every frame, which is
+                    the main source of jank on lower-power mobile GPUs. The
+                    opacity/y motion (both cheap, compositor-only) is kept
+                    identically on both, just faster on mobile. */}
                 <motion.div
                   id="mobile-nav-panel"
                   role="dialog"
@@ -157,20 +166,26 @@ const MobileMenu = () => {
                   initial={
                     reduced
                       ? { opacity: 0 }
+                      : isMobile
+                      ? { opacity: 0, y: -10 }
                       : { opacity: 0, y: -16, filter: "blur(8px)" }
                   }
                   animate={
                     reduced
                       ? { opacity: 1 }
+                      : isMobile
+                      ? { opacity: 1, y: 0 }
                       : { opacity: 1, y: 0, filter: "blur(0px)" }
                   }
                   exit={
                     reduced
                       ? { opacity: 0 }
+                      : isMobile
+                      ? { opacity: 0, y: -8 }
                       : { opacity: 0, y: -12, filter: "blur(8px)" }
                   }
                   transition={{
-                    duration: reduced ? 0.15 : 0.4,
+                    duration: reduced ? 0.15 : isMobile ? 0.26 : 0.4,
                     ease: EASE_OUT_EXPO,
                   }}
                 >

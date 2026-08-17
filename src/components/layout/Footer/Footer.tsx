@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import logo from "../../../assets/logo/logo.png";
 import { EASE_OUT_QUINT } from "../../../constants/motion";
 import { BOOKING_URL } from "../../../config/booking";
+import { useIsMobile } from "../../../hooks/useIsMobile";
 import { EMAIL, FOOTER_NAV, SOCIALS, type SocialId } from "./footer.data";
 
 /**
@@ -100,17 +101,26 @@ const LINK =
 
 const Footer = () => {
   const reduced = useReducedMotion() ?? false;
+  const isMobile = useIsMobile();
   const socials = SOCIALS.filter((s) => s.href);
 
   const reveal = (delay: number) => ({
-    initial: reduced ? { opacity: 0 } : { opacity: 0, y: 20, filter: "blur(6px)" },
-    whileInView: reduced
-      ? { opacity: 1 }
-      : { opacity: 1, y: 0, filter: "blur(0px)" },
+    initial:
+      reduced
+        ? { opacity: 0 }
+        : isMobile
+        ? { opacity: 0, y: 12 }
+        : { opacity: 0, y: 20, filter: "blur(6px)" },
+    whileInView:
+      reduced
+        ? { opacity: 1 }
+        : isMobile
+        ? { opacity: 1, y: 0 }
+        : { opacity: 1, y: 0, filter: "blur(0px)" },
     viewport: { once: true, margin: "-70px" } as const,
     transition: {
-      duration: reduced ? 0.3 : 0.6,
-      delay: reduced ? 0 : delay,
+      duration: reduced ? 0.3 : isMobile ? 0.4 : 0.6,
+      delay: reduced ? 0 : isMobile ? delay * 0.5 : delay,
       ease: EASE_OUT_QUINT,
     },
   });
