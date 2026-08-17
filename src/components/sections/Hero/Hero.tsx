@@ -43,7 +43,6 @@ const Hero = () => {
             flex
             justify-center
             lg:justify-start
-            pl-6
             md:pl-12
             lg:pl-0
           "
