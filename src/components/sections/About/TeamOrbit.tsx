@@ -151,7 +151,7 @@ const TeamOrbit = ({ onOpen }: TeamOrbitProps) => {
         </div>
       </div>
 
-      {/* ── Mobile: core above, founder full-width, then a pair ─ */}
+      {/* ── Mobile: core above, then every card in a single column ─ */}
       <div className="md:hidden">
         <div className="flex justify-center">
           <div className="scale-[0.82] origin-top">
@@ -159,14 +159,9 @@ const TeamOrbit = ({ onOpen }: TeamOrbitProps) => {
           </div>
         </div>
 
-        <div className="mt-2 grid grid-cols-2 gap-3.5">
-          <div className="col-span-2">
-            <TeamMemberCard member={TEAM[0]} index={0} onOpen={onOpen} />
-          </div>
-          {TEAM.slice(1).map((m, i) => (
-            <div key={m.id} className={i === 2 ? "col-span-2" : undefined}>
-              <TeamMemberCard member={m} index={i + 1} onOpen={onOpen} />
-            </div>
+        <div className="mt-2 flex flex-col gap-3.5">
+          {TEAM.map((m, i) => (
+            <TeamMemberCard key={m.id} member={m} index={i} onOpen={onOpen} />
           ))}
         </div>
       </div>

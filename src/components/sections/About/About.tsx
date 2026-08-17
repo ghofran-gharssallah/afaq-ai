@@ -46,10 +46,13 @@ const About = () => {
   return (
     <section
       id="about"
-      /* Clears the fixed navbar when the existing "About" nav link jumps here. */
+      /* Clears the fixed navbar when the existing "About" nav link jumps here.
+         max-sm:pt gives this page's own first section extra breathing room
+         under the navbar on mobile only — see Services.tsx for the full note. */
       className="
         relative overflow-hidden
         scroll-mt-[124px]
+        max-sm:pt-[136px]
         pt-[clamp(96px,13vw,168px)]
         pb-[clamp(88px,11vw,148px)]
       "

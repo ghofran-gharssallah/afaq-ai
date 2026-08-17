@@ -34,7 +34,7 @@ const Navbar = () => {
 
             rounded-[24px]
 
-            px-8
+            px-1 lg:px-8
 
             shadow-[0_12px_45px_rgba(79,40,183,.14)]
           "
@@ -73,7 +73,7 @@ const Navbar = () => {
           </div>
 
           {/* Mobile */}
-          <div className="flex h-full items-center justify-between px-4 lg:hidden">
+          <div className="flex h-full items-center justify-between px-2 lg:hidden">
             <MobileMenu />
           </div>
         </nav>

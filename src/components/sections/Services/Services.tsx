@@ -62,10 +62,16 @@ const Services = () => {
     <section
       id="services"
       /* scroll-mt clears the fixed navbar (20px offset + 80px tall) when the
-         Navbar's existing "Services" link jumps to this anchor. */
+         Navbar's existing "Services" link jumps to this anchor. max-sm:pt
+         gives this page's own first section (below `sm` only — tablet/
+         desktop untouched) more breathing room under the fixed navbar than
+         the shared clamp's 96px floor, which sits close enough to the
+         navbar's own ~100px height to read as cramped when this is the very
+         first thing on the page rather than a section scrolled into. */
       className="
         relative overflow-hidden
         scroll-mt-[124px]
+        max-sm:pt-[136px]
         pt-[clamp(96px,13vw,168px)]
         pb-[clamp(88px,11vw,148px)]
       "

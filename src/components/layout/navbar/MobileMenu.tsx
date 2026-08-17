@@ -79,7 +79,15 @@ const MobileMenu = () => {
           -translate-y-1/2
         "
       >
-        <Logo />
+        {/* Scaled down on mobile only: the desktop mark's side lines are
+            82px each and, at narrow nav widths, extend into the hamburger
+            button/spacer's own space (the button already has
+            pointer-events-none passed through, this is the visual half of
+            that same overlap). Shrinking the whole mark keeps its exact
+            design and centering, just smaller, so it clears both sides. */}
+        <div className="scale-[0.6] origin-center lg:scale-100">
+          <Logo />
+        </div>
       </div>
 
       {/* Menu Button */}
