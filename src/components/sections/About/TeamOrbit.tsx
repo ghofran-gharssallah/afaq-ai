@@ -2,8 +2,12 @@ import { motion, useReducedMotion } from "framer-motion";
 
 import logo from "../../../assets/logo/logo.png";
 import { EASE_OUT_EXPO } from "../../../constants/motion";
+import { useMediaQuery } from "../../../hooks/useIsMobile";
 import TeamMemberCard from "./TeamMember";
 import { TEAM, type TeamMember } from "./team.data";
+
+/** Matches the `md:` (768px) split every class below already uses. */
+const MOBILE_QUERY = "(max-width: 767px)";
 
 /**
  * The team composition.
@@ -123,48 +127,63 @@ const TeamOrbit = ({ onOpen }: TeamOrbitProps) => {
   const left = [TEAM[0], TEAM[2]];
   const right = [TEAM[1], TEAM[3]];
 
+  /**
+   * `Core` runs three continuous Framer Motion loops (two counter-rotating
+   * arcs, one floating mark — all `repeat: Infinity`, driven by Framer's own
+   * rAF engine, not CSS). Both compositions below used to always mount and
+   * merely go `display:none` by breakpoint, so on mobile the entire desktop
+   * orbit — including its own separate `Core` — kept animating invisibly for
+   * as long as the About page stayed open. Conditionally rendering only the
+   * visible composition actually unmounts, and stops, the other one.
+   */
+  const isMobile = useMediaQuery(MOBILE_QUERY);
+
   return (
     <>
       {/* ── Desktop / tablet: orbit arrangement ───────────────── */}
-      <div className="hidden md:grid md:grid-cols-[1fr_auto_1fr] md:items-center md:gap-8 lg:gap-12">
-        <div className="flex flex-col gap-6 lg:translate-y-8 lg:gap-8">
-          {left.map((m, i) => (
-            <TeamMemberCard key={m.id} member={m} index={i} onOpen={onOpen} />
-          ))}
-        </div>
+      {!isMobile && (
+        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-8 lg:gap-12">
+          <div className="flex flex-col gap-6 lg:translate-y-8 lg:gap-8">
+            {left.map((m, i) => (
+              <TeamMemberCard key={m.id} member={m} index={i} onOpen={onOpen} />
+            ))}
+          </div>
 
-        <div className="relative">
-          <Tether side="left" />
-          <Core />
-          <Tether side="right" />
-        </div>
-
-        <div className="flex flex-col gap-6 lg:-translate-y-8 lg:gap-8">
-          {right.map((m, i) => (
-            <TeamMemberCard
-              key={m.id}
-              member={m}
-              index={i + 1}
-              onOpen={onOpen}
-            />
-          ))}
-        </div>
-      </div>
-
-      {/* ── Mobile: core above, then every card in a single column ─ */}
-      <div className="md:hidden">
-        <div className="flex justify-center">
-          <div className="scale-[0.82] origin-top">
+          <div className="relative">
+            <Tether side="left" />
             <Core />
+            <Tether side="right" />
+          </div>
+
+          <div className="flex flex-col gap-6 lg:-translate-y-8 lg:gap-8">
+            {right.map((m, i) => (
+              <TeamMemberCard
+                key={m.id}
+                member={m}
+                index={i + 1}
+                onOpen={onOpen}
+              />
+            ))}
           </div>
         </div>
+      )}
 
-        <div className="mt-2 flex flex-col gap-3.5">
-          {TEAM.map((m, i) => (
-            <TeamMemberCard key={m.id} member={m} index={i} onOpen={onOpen} />
-          ))}
+      {/* ── Mobile: core above, then every card in a single column ─ */}
+      {isMobile && (
+        <div>
+          <div className="flex justify-center">
+            <div className="scale-[0.82] origin-top">
+              <Core />
+            </div>
+          </div>
+
+          <div className="mt-2 flex flex-col gap-3.5">
+            {TEAM.map((m, i) => (
+              <TeamMemberCard key={m.id} member={m} index={i} onOpen={onOpen} />
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 };

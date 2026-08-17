@@ -26,7 +26,7 @@ import type { Project } from "./projects.data";
 const SURFACE = `
   relative overflow-hidden rounded-[26px]
   border border-white/[0.08]
-  bg-white/[0.03] backdrop-blur-xl
+  bg-white/[0.03] backdrop-blur-xl max-sm:backdrop-blur-md
   shadow-[0_14px_44px_rgba(6,4,18,.40)]
   transition-[border-color,background-color,box-shadow] duration-500 ease-out
   group-hover:border-violet-400/28
@@ -122,7 +122,7 @@ const ProjectCard = ({ project, index, onOpen }: ProjectCardProps) => {
         group/cta inline-flex items-center gap-2.5 rounded-full
         border border-white/12 bg-white/[0.04] px-6 py-3
         text-[13.5px] font-semibold text-white outline-none
-        backdrop-blur-xl
+        backdrop-blur-xl max-sm:backdrop-blur-md
         transition-all duration-300
         hover:border-violet-400/40 hover:bg-white/[0.07]
         focus-visible:ring-2 focus-visible:ring-violet-400/60
@@ -174,7 +174,7 @@ const ProjectCard = ({ project, index, onOpen }: ProjectCardProps) => {
       {/* Ambient bloom */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -inset-4 -z-10 rounded-[36px] bg-violet-500/18 opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-100"
+        className="pointer-events-none absolute -inset-4 -z-10 rounded-[36px] bg-violet-500/18 opacity-0 max-sm:hidden blur-3xl transition-opacity duration-500 group-hover:opacity-100"
       />
 
       <div className={SURFACE}>

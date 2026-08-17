@@ -73,7 +73,7 @@ const SecondaryButton = ({
     onClick={onClick}
     className="
       group inline-flex h-[44px] min-w-[180px] items-center justify-center gap-3
-      rounded-full border border-white/15 bg-white/[0.03] backdrop-blur-xl px-8
+      rounded-full border border-white/15 bg-white/[0.03] backdrop-blur-xl max-sm:backdrop-blur-md px-8
       text-[14px] font-semibold text-white
       transition-all duration-300
       hover:border-violet-400/40 hover:bg-white/[0.06]
@@ -174,7 +174,7 @@ const ServiceModal = ({ service, onClose }: ServiceModalProps) => {
         <div className="fixed inset-0 z-[100] flex items-start justify-center overflow-y-auto overscroll-contain p-4 sm:p-6 lg:p-8">
           {/* Backdrop — blurs and darkens the page, and closes on click */}
           <motion.div
-            className="fixed inset-0 bg-[#01010A]/72 backdrop-blur-xl"
+            className="fixed inset-0 bg-[#01010A]/72 backdrop-blur-xl max-sm:backdrop-blur-md"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -225,7 +225,7 @@ const ServiceModal = ({ service, onClose }: ServiceModalProps) => {
             {/* Outer violet bloom */}
             <div
               aria-hidden
-              className="pointer-events-none absolute -inset-6 -z-10 rounded-[44px] bg-violet-600/20 blur-3xl"
+              className="pointer-events-none absolute -inset-6 -z-10 rounded-[44px] bg-violet-600/20 blur-3xl max-sm:blur-xl"
             />
 
             <div

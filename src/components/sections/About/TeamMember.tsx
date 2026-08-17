@@ -18,7 +18,7 @@ const SURFACE = `
   relative flex h-full w-full items-center gap-4 overflow-hidden
   rounded-[20px] p-4 sm:p-5
   border border-white/[0.08]
-  bg-white/[0.035] backdrop-blur-xl
+  bg-white/[0.035] backdrop-blur-xl max-sm:backdrop-blur-md
   shadow-[0_10px_34px_rgba(6,4,18,.38)]
   transition-[border-color,background-color,box-shadow] duration-500 ease-out
   group-hover:border-violet-400/30
@@ -146,7 +146,7 @@ const TeamMemberCard = ({ member, index, onOpen }: TeamMemberProps) => {
         className={`
           pointer-events-none absolute -inset-3 -z-10 rounded-[28px] blur-2xl
           transition-opacity duration-500
-          ${featured ? "bg-violet-500/22 opacity-40" : "bg-violet-500/20 opacity-0"}
+          ${featured ? "bg-violet-500/22 opacity-40" : "bg-violet-500/20 opacity-0 max-sm:hidden"}
           group-hover:opacity-100
         `}
       />

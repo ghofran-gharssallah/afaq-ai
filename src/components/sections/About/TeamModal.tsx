@@ -139,7 +139,7 @@ const TeamModal = ({ member, onClose }: TeamModalProps) => {
       {open && member && (
         <div className="fixed inset-0 z-[100] flex items-start justify-center overflow-y-auto overscroll-contain p-4 sm:p-6 lg:p-8">
           <motion.div
-            className="fixed inset-0 bg-[#01010A]/72 backdrop-blur-xl"
+            className="fixed inset-0 bg-[#01010A]/72 backdrop-blur-xl max-sm:backdrop-blur-md"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -185,7 +185,7 @@ const TeamModal = ({ member, onClose }: TeamModalProps) => {
           >
             <div
               aria-hidden
-              className="pointer-events-none absolute -inset-6 -z-10 rounded-[44px] bg-violet-600/20 blur-3xl"
+              className="pointer-events-none absolute -inset-6 -z-10 rounded-[44px] bg-violet-600/20 blur-3xl max-sm:blur-xl"
             />
 
             <div className="relative overflow-hidden rounded-[26px] border border-white/[0.10] bg-[linear-gradient(180deg,rgba(23,17,40,.92)_0%,rgba(11,7,19,.96)_100%)] shadow-[0_40px_120px_rgba(4,2,12,.7)] sm:rounded-[30px]">
@@ -358,7 +358,7 @@ const TeamModal = ({ member, onClose }: TeamModalProps) => {
                     href={member.linkedin}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group inline-flex h-[44px] min-w-[176px] items-center justify-center gap-2.5 rounded-full border border-white/15 bg-white/[0.03] px-8 text-[14px] font-semibold text-white backdrop-blur-xl transition-all duration-300 hover:border-violet-400/40 hover:bg-white/[0.06]"
+                    className="group inline-flex h-[44px] min-w-[176px] items-center justify-center gap-2.5 rounded-full border border-white/15 bg-white/[0.03] px-8 text-[14px] font-semibold text-white backdrop-blur-xl max-sm:backdrop-blur-md transition-all duration-300 hover:border-violet-400/40 hover:bg-white/[0.06]"
                   >
                     <LinkedInGlyph />
                     LinkedIn

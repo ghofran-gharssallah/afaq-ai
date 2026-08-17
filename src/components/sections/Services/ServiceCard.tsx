@@ -16,7 +16,7 @@ const SURFACE = `
   relative flex h-full flex-col overflow-hidden
   rounded-[22px] p-7 lg:p-8
   border border-white/[0.08]
-  bg-white/[0.035] backdrop-blur-xl
+  bg-white/[0.035] backdrop-blur-xl max-sm:backdrop-blur-md
   shadow-[0_10px_34px_rgba(6,4,18,.38)]
   transition-[border-color,background-color,box-shadow] duration-500 ease-out
   group-hover:border-violet-400/30
@@ -102,7 +102,7 @@ const ServiceCard = ({ service, index, onOpen }: ServiceCardProps) => {
         className="
           pointer-events-none absolute -inset-3 -z-10 rounded-[30px]
           bg-violet-500/20 blur-2xl
-          opacity-0 transition-opacity duration-500
+          opacity-0 max-sm:hidden transition-opacity duration-500
           group-hover:opacity-100
         "
       />

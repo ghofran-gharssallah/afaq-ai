@@ -85,7 +85,7 @@ const SecondaryLink = ({
     className="
       group inline-flex h-[48px] min-w-[196px] items-center justify-center gap-2.5
       rounded-full border border-white/15 bg-white/[0.03] px-8
-      text-[15px] font-semibold text-white outline-none backdrop-blur-xl
+      text-[15px] font-semibold text-white outline-none backdrop-blur-xl max-sm:backdrop-blur-md
       transition-all duration-300
       hover:border-violet-400/40 hover:bg-white/[0.06]
       focus-visible:ring-2 focus-visible:ring-violet-400/60

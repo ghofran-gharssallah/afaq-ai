@@ -188,14 +188,14 @@ const Contact = () => {
           <div className="relative lg:col-span-8">
             <div
               aria-hidden
-              className="pointer-events-none absolute -inset-4 -z-10 rounded-[38px] bg-violet-600/12 blur-3xl"
+              className="pointer-events-none absolute -inset-4 -z-10 rounded-[38px] bg-violet-600/12 blur-3xl max-sm:blur-xl"
             />
 
             <div
               className="
                 relative overflow-hidden rounded-[26px]
                 border border-white/[0.09]
-                bg-white/[0.035] backdrop-blur-xl
+                bg-white/[0.035] backdrop-blur-xl max-sm:backdrop-blur-md
                 p-6 shadow-[0_18px_54px_rgba(6,4,18,.42)]
                 sm:p-9
               "

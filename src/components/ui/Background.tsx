@@ -1,5 +1,7 @@
 import { useEffect, useRef } from "react";
 
+import { useIsMobile } from "../../hooks/useIsMobile";
+
 /**
  * Global background environment.
  *
@@ -117,6 +119,21 @@ const par = (px: number): React.CSSProperties => ({
 
 const Background = () => {
   const rootRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
+
+  /**
+   * Every particle below carries `will-change`, which promotes it to its own
+   * compositor layer for the page's entire lifetime — not just while
+   * animating. This component is mounted once and stays on screen behind
+   * every route, so ~36 permanently-promoted layers is a real, constant GPU
+   * memory/compositing cost on mobile. Halving the counts keeps the same
+   * field density and randomness (same fixed coordinates, just fewer of
+   * them), not a different effect. Desktop keeps every particle.
+   */
+  const dust = isMobile ? DUST.slice(0, 5) : DUST;
+  const stars = isMobile ? STARS.slice(0, 8) : STARS;
+  const motes = isMobile ? MOTES.slice(0, 3) : MOTES;
+  const rays = isMobile ? RAYS.slice(0, 2) : RAYS;
 
   /**
    * Pointer parallax writes two CSS variables once per frame; every layer
@@ -259,7 +276,7 @@ const Background = () => {
       {/* 6 ─ Volumetric rays. Static rotation on the wrapper, animation on the
              inner layer, so the beam texture is rasterised once. --------- */}
       <div className="absolute inset-0 overflow-hidden" style={par(19)}>
-        {RAYS.map((ray, i) => (
+        {rays.map((ray, i) => (
           <div
             key={i}
             className="absolute top-[-45%] h-[195%] origin-top"
@@ -315,7 +332,7 @@ const Background = () => {
 
       {/* 8 ─ Far dust ------------------------------------------------------ */}
       <div className="absolute inset-0" style={par(7)}>
-        {DUST.map((p, i) => (
+        {dust.map((p, i) => (
           <span
             key={i}
             className="atmos-star absolute rounded-full bg-violet-200"
@@ -336,7 +353,7 @@ const Background = () => {
 
       {/* 9 ─ Mid-field stars ---------------------------------------------- */}
       <div className="absolute inset-0" style={par(15)}>
-        {STARS.map((star, i) => (
+        {stars.map((star, i) => (
           <span
             key={i}
             className="atmos-star absolute rounded-full bg-white"
@@ -358,7 +375,7 @@ const Background = () => {
       {/* 10 ─ Near motes. Largest parallax, so they separate hardest from the
               far field. Gradient discs rather than blurred dots. --------- */}
       <div className="absolute inset-0" style={par(38)}>
-        {MOTES.map((m, i) => (
+        {motes.map((m, i) => (
           <span
             key={i}
             className="atmos-orb absolute rounded-full"

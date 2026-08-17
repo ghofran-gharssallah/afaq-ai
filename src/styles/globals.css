@@ -257,6 +257,18 @@ h6{
 
 }
 
+/* This is the Navbar pill and the mobile nav panel — both fixed, on screen
+   for the entire session, with the animated Background stack always moving
+   underneath them. That forces the browser to resample a 32px backdrop blur
+   every frame, forever, which is real continuous GPU cost on mobile. Same
+   glass look at a lighter radius; nothing above 640px changes. */
+@media (max-width:639px){
+  .glass{
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+  }
+}
+
 .glass::before{
 
   content:"";

@@ -6,9 +6,24 @@ import CTAButton from "./CTAButton";
 import MobileMenu from "./MobileMenu";
 
 import { D, EASE_OUT_EXPO, T } from "../../../constants/motion";
+import { useMediaQuery } from "../../../hooks/useIsMobile";
+
+/** Matches the `lg:` (1024px) split every class below already uses. */
+const COMPACT_QUERY = "(max-width: 1023px)";
 
 const Navbar = () => {
   const reduced = useReducedMotion();
+  /**
+   * `Logo` runs continuous Framer Motion idle loops (float, breathe, light
+   * sweep — all `repeat: Infinity`, driven by Framer's own rAF engine, not
+   * CSS). The desktop and mobile halves below were both always mounted and
+   * merely CSS-hidden by breakpoint (`hidden lg:grid` / `lg:hidden`), so the
+   * invisible one kept animating forever regardless of viewport, doubling
+   * this component's persistent JS workload on every page for no visual
+   * benefit. Conditionally rendering only the visible half actually unmounts
+   * — and stops — the other one.
+   */
+  const isCompact = useMediaQuery(COMPACT_QUERY);
 
   return (
     <motion.header
@@ -42,40 +57,43 @@ const Navbar = () => {
           <div className="glow absolute inset-0 rounded-[24px]" />
 
           {/* Desktop */}
-          <div
-            className="
-              hidden
-              lg:grid
+          {!isCompact && (
+            <div
+              className="
+                grid
 
-              h-full
+                h-full
 
-              grid-cols-[300px_auto_380px]
+                grid-cols-[300px_auto_380px]
 
-              items-center
-            "
-          >
-            {/* Left Menu */}
-            <div className="flex justify-end pr-10">
-              <NavMenu side="left" />
+                items-center
+              "
+            >
+              {/* Left Menu */}
+              <div className="flex justify-end pr-10">
+                <NavMenu side="left" />
+              </div>
+
+              {/* Logo */}
+              <div className="flex justify-center">
+                <Logo />
+              </div>
+
+              {/* Right Menu */}
+              <div className="flex items-center justify-start pl-10 gap-6">
+                <NavMenu side="right" />
+
+                <CTAButton />
+              </div>
             </div>
-
-            {/* Logo */}
-            <div className="flex justify-center">
-              <Logo />
-            </div>
-
-            {/* Right Menu */}
-            <div className="flex items-center justify-start pl-10 gap-6">
-              <NavMenu side="right" />
-
-              <CTAButton />
-            </div>
-          </div>
+          )}
 
           {/* Mobile */}
-          <div className="flex h-full items-center justify-between px-2 lg:hidden">
-            <MobileMenu />
-          </div>
+          {isCompact && (
+            <div className="flex h-full items-center justify-between px-2">
+              <MobileMenu />
+            </div>
+          )}
         </nav>
       </div>
     </motion.header>

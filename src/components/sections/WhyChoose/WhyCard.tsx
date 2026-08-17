@@ -20,7 +20,7 @@ import type { Feature } from "./features.data";
 const BASE = `
   relative h-full overflow-hidden
   border border-white/[0.08]
-  bg-white/[0.035] backdrop-blur-xl
+  bg-white/[0.035] backdrop-blur-xl max-sm:backdrop-blur-md
   transition-[border-color,background-color,box-shadow] duration-500 ease-out
   group-hover:border-violet-400/30
   group-hover:bg-white/[0.055]
@@ -96,7 +96,7 @@ const WhyCard = ({ feature, index }: WhyCardProps) => {
         className={`
           pointer-events-none absolute -inset-3 -z-10 rounded-[30px] blur-2xl
           bg-violet-500/20 transition-opacity duration-500
-          ${tier === "feature" ? "opacity-35" : "opacity-0"}
+          ${tier === "feature" ? "opacity-35" : "opacity-0 max-sm:hidden"}
           group-hover:opacity-100
         `}
       />

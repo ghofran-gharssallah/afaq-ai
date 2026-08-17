@@ -59,7 +59,7 @@ const Stats = () => {
       className="
         relative overflow-hidden rounded-[24px]
         border border-white/[0.08]
-        bg-white/[0.03] backdrop-blur-xl
+        bg-white/[0.03] backdrop-blur-xl max-sm:backdrop-blur-md
         shadow-[0_14px_44px_rgba(6,4,18,.36)]
       "
       initial={

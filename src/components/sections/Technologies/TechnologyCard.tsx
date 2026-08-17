@@ -16,7 +16,7 @@ const SURFACE = `
   relative flex h-full flex-col items-center justify-center gap-3.5
   overflow-hidden rounded-[20px]
   border border-white/[0.09]
-  bg-white/[0.035] backdrop-blur-xl
+  bg-white/[0.035] backdrop-blur-xl max-sm:backdrop-blur-md
   shadow-[0_8px_28px_rgba(6,4,18,.35)]
   transition-[border-color,box-shadow,background-color] duration-500 ease-out
   group-hover:border-violet-400/30
@@ -166,7 +166,7 @@ const TechnologyCard = ({ tech, index }: TechnologyCardProps) => {
         className="
           pointer-events-none absolute -inset-2 -z-10 rounded-[26px]
           bg-violet-500/20 blur-2xl
-          opacity-0 transition-opacity duration-500
+          opacity-0 max-sm:hidden transition-opacity duration-500
           group-hover:opacity-100
         "
       />
