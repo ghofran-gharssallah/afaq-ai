@@ -130,9 +130,20 @@ const Background = () => {
    * field density and randomness (same fixed coordinates, just fewer of
    * them), not a different effect. Desktop keeps every particle.
    */
-  const dust = isMobile ? DUST.slice(0, 5) : DUST;
-  const stars = isMobile ? STARS.slice(0, 8) : STARS;
-  const motes = isMobile ? MOTES.slice(0, 3) : MOTES;
+  /**
+   * Measured with Chrome DevTools' CPU throttling (4x — Lighthouse's own
+   * mobile-equivalent multiplier) plus a `longtask` PerformanceObserver:
+   * on a mid-range-mobile-equivalent CPU, this particle field was the single
+   * largest contributor to main-thread blocking at idle — more than double
+   * any other individual atmosphere layer (floor grid, fog, sheen, key
+   * light), because each particle is `will-change`-promoted to its own
+   * compositor layer for the page's entire lifetime. Cut further than the
+   * first pass to bring idle blocking down substantially; same field, same
+   * randomness, just fewer instances of it.
+   */
+  const dust = isMobile ? DUST.slice(0, 3) : DUST;
+  const stars = isMobile ? STARS.slice(0, 4) : STARS;
+  const motes = isMobile ? MOTES.slice(0, 2) : MOTES;
   const rays = isMobile ? RAYS.slice(0, 2) : RAYS;
 
   /**

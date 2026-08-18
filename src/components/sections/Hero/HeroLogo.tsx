@@ -17,9 +17,40 @@ import {
   T,
 } from "../../../constants/motion";
 
+/**
+ * The four floating icon cards.
+ *
+ * MOBILE PERFORMANCE (max-sm, i.e. below 640px — desktop is untouched):
+ * `backdrop-blur-xl` is dropped and the translucent fill is made a little
+ * more opaque instead.
+ *
+ * These cards sit directly on top of the orbit shells, which rotate
+ * continuously, so each card's backdrop-filter had to re-sample and
+ * re-blur its backdrop on every frame — four full backdrop re-blurs per
+ * frame for as long as the Hero is on screen. Removing that is real work
+ * saved on the GPU.
+ *
+ * Measured honestly, though, it is NOT what caps the mobile frame rate:
+ * an interleaved A/B at a mobile-equivalent CPU (4x throttle) moved Home
+ * from 3.7fps to 4.0fps — inside the run-to-run noise. What actually
+ * dominates is the sheer NUMBER of elements Framer animates per frame in
+ * the Hero (~20: five rings x two orbit layers, six comets, four cards,
+ * plus the mark's own loops); style recalculation alone is ~1245ms of a
+ * 2924ms budget, and it drops to ~446ms when the whole block is removed.
+ * Reducing that element count is the lever that would move Home; this
+ * change is not a substitute for it.
+ *
+ * The compensation stays on the SAME white wash the desktop card uses,
+ * just doubled (0.05 -> 0.10). That matters: blurring the backdrop and
+ * laying 5% white over it makes the card read slightly *lighter* than its
+ * surroundings, so swapping in a dark fill would invert that relationship
+ * and the cards would read as dark holes instead of glass. Everything else
+ * — size, position, border, shadow, icon, float animation — is untouched.
+ */
 const card = `
 absolute rounded-[22px] border border-violet-500/20 bg-white/[0.05]
 backdrop-blur-xl p-2 sm:p-3 lg:p-4
+max-sm:backdrop-blur-none max-sm:bg-white/[0.10]
 shadow-[0_0_30px_rgba(79,40,183,.20)] transition-all duration-300
 hover:scale-110 hover:border-violet-400/40 hover:bg-white/[0.08]
 `;
