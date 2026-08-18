@@ -841,13 +841,28 @@ const HeroLogo = () => {
       </motion.div>
 
       {/* Orbits — in front of the logo, depth-masked. Same flatten as the
-          back copy so the two halves stay one coherent shell. */}
-      <div
-        className="pointer-events-none absolute -inset-[7%] z-30"
-        style={{ transform: ORBIT_TILT }}
-      >
-        <OrbitLayer front reduced={reduced} />
-      </div>
+          back copy so the two halves stay one coherent shell.
+
+          MOBILE (<640px): not rendered at all. This is the *duplicate* of the
+          back shell, drawn a second time under an SVG mask so the bright rings
+          appear to pass in front of the mark on their way round. It costs a
+          second full set of infinitely-rotating groups and travelling comets —
+          the single biggest block of per-frame animation work in the Hero —
+          and at phone size the masked sliver it adds is barely legible.
+          Conditionally rendered rather than CSS-hidden on purpose: Framer's
+          loops are driven by its own rAF engine, which keeps running on a
+          `display:none` subtree, so hiding it would cost exactly as much as
+          showing it. The back shell (line ~753) is untouched, so the orbit
+          system, its ring count and its geometry all stay as they are.
+          Desktop renders this exactly as before. */}
+      {!isMobile && (
+        <div
+          className="pointer-events-none absolute -inset-[7%] z-30"
+          style={{ transform: ORBIT_TILT }}
+        >
+          <OrbitLayer front reduced={reduced} />
+        </div>
+      )}
 
       {/* Floating icon cards — each on its own depth plane (see ICONS) */}
       {ICONS.map(({ Icon, size, float, dur, pos, depth }, i) => {
