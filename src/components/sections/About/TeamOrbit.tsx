@@ -2,7 +2,7 @@ import { motion, useReducedMotion } from "framer-motion";
 
 import logo from "../../../assets/logo/logo.png";
 import { EASE_OUT_EXPO } from "../../../constants/motion";
-import { useMediaQuery } from "../../../hooks/useIsMobile";
+import { useIsMobile, useMediaQuery } from "../../../hooks/useIsMobile";
 import TeamMemberCard from "./TeamMember";
 import { TEAM, type TeamMember } from "./team.data";
 
@@ -29,14 +29,27 @@ const MOBILE_QUERY = "(max-width: 767px)";
 
 const Core = () => {
   const reduced = useReducedMotion() ?? false;
+  // This is this codebase's standard 640px reveal-timing breakpoint (not the
+  // 768px layout split above) — same one every other scroll-reveal in the
+  // app already keys its mobile duration/margin off.
+  const isMobile = useIsMobile();
 
   return (
     <motion.div
       className="relative flex items-center justify-center"
       initial={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.86 }}
       whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: reduced ? 0.3 : 0.9, ease: EASE_OUT_EXPO }}
+      // Mobile: reveal starts as the element approaches from below rather
+      // than after it has already travelled 80px into view; desktop keeps
+      // its exact original trigger point and duration.
+      viewport={{
+        once: true,
+        margin: isMobile ? "0px 0px 100px 0px" : "-80px",
+      }}
+      transition={{
+        duration: reduced ? 0.3 : isMobile ? 0.3 : 0.9,
+        ease: EASE_OUT_EXPO,
+      }}
     >
       <div className="relative h-[190px] w-[190px] lg:h-[230px] lg:w-[230px]">
         {/* Volumetric core glow */}

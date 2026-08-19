@@ -162,7 +162,7 @@ const ProjectCard = ({ project, index, onOpen }: ProjectCardProps) => {
           ? { opacity: 1, y: 0 }
           : { opacity: 1, y: 0, filter: "blur(0px)" }
       }
-      viewport={{ once: true, margin: "-80px" }}
+      viewport={{ once: true, margin: isMobile ? "0px 0px 100px 0px" : "-80px" }}
       whileHover={reduced ? undefined : { y: -6 }}
       transition={{
         duration: reduced ? 0.3 : isMobile ? 0.27 : 0.75,

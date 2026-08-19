@@ -150,7 +150,7 @@ const TechnologyCard = ({ tech, index }: TechnologyCardProps) => {
           ? { opacity: 1, y: 0 }
           : { opacity: 1, y: 0, filter: "blur(0px)" }
       }
-      viewport={{ once: true, margin: "-60px" }}
+      viewport={{ once: true, margin: isMobile ? "0px 0px 100px 0px" : "-60px" }}
       whileHover={reduced ? undefined : { y: -6, scale: 1.025 }}
       transition={{
         duration: reduced ? 0.3 : isMobile ? 0.24 : 0.62,

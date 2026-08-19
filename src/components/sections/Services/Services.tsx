@@ -60,7 +60,14 @@ const Services = () => {
         : isMobile
         ? { opacity: 1, y: 0 }
         : { opacity: 1, y: 0, filter: "blur(0px)" },
-    viewport: { once: true, margin: "-80px" } as const,
+    // Mobile: a positive bottom margin starts the reveal while the element
+    // is still approaching from below, instead of waiting for it to travel
+    // 80px into the viewport first — that wait was reading as "the content
+    // is late." Desktop keeps the exact original trigger point.
+    viewport: {
+      once: true,
+      margin: isMobile ? "0px 0px 100px 0px" : "-80px",
+    } as const,
     transition: {
       duration: reduced ? 0.3 : isMobile ? 0.27 : 0.7,
       delay: reduced ? 0 : isMobile ? delay * 0.3 : delay,

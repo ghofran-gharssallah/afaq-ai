@@ -40,7 +40,12 @@ const Process = () => {
         : isMobile
         ? { opacity: 1, y: 0 }
         : { opacity: 1, y: 0, filter: "blur(0px)" },
-    viewport: { once: true, margin: "-80px" } as const,
+    // Mobile: reveal starts as the element approaches from below rather than
+    // after it has already travelled 80px into view. Desktop is unchanged.
+    viewport: {
+      once: true,
+      margin: isMobile ? "0px 0px 100px 0px" : "-80px",
+    } as const,
     transition: {
       duration: reduced ? 0.3 : isMobile ? 0.27 : 0.7,
       delay: reduced ? 0 : isMobile ? delay * 0.3 : delay,

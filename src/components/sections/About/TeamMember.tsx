@@ -130,7 +130,7 @@ const TeamMemberCard = ({ member, index, onOpen }: TeamMemberProps) => {
           ? { opacity: 1, y: 0 }
           : { opacity: 1, y: 0, filter: "blur(0px)" }
       }
-      viewport={{ once: true, margin: "-70px" }}
+      viewport={{ once: true, margin: isMobile ? "0px 0px 100px 0px" : "-70px" }}
       whileHover={reduced ? undefined : { y: -6, scale: 1.02 }}
       transition={{
         duration: reduced ? 0.3 : isMobile ? 0.25 : 0.68,
