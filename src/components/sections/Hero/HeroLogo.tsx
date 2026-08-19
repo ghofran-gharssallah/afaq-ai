@@ -8,6 +8,7 @@ import {
   useTransform,
 } from "framer-motion";
 import { BrainCircuit, Bot, Cpu, Sparkles, Workflow } from "lucide-react";
+import { Link } from "react-router-dom";
 
 import logo from "../../../assets/logo/logo.png";
 import {
@@ -807,14 +808,39 @@ const HeroLogo = () => {
             delay: T.heroLogo + D.heroLogo,
           }}
         >
-          <img
-            src={logo}
-            alt="AFAQ AI"
-            className="
-              w-[210px] sm:w-[270px] md:w-[330px] lg:w-[400px] xl:w-[450px]
-              select-none drop-shadow-[0_0_90px_rgba(79,40,183,.65)]
-            "
-          />
+          {/* Mobile only: the mark becomes a tap target back to Home. Wraps
+              only the <img> — the tilt/float motion.divs above it, its size,
+              position and every animation are untouched. Since this Hero
+              only ever renders on the Home route itself, a tap here is
+              always "navigate to the page already showing" — Link's own
+              behavior for that is a no-op (no reload, no remount), which is
+              exactly the required "already on Home: do nothing" case.
+              Desktop renders the bare <img>, unchanged. */}
+          {isMobile ? (
+            <Link
+              to="/"
+              aria-label="Go to Home"
+              className="block rounded-full outline-none focus-visible:ring-2 focus-visible:ring-violet-400/60 focus-visible:ring-offset-4 focus-visible:ring-offset-transparent"
+            >
+              <img
+                src={logo}
+                alt="AFAQ AI"
+                className="
+                  w-[210px] sm:w-[270px] md:w-[330px] lg:w-[400px] xl:w-[450px]
+                  select-none drop-shadow-[0_0_90px_rgba(79,40,183,.65)]
+                "
+              />
+            </Link>
+          ) : (
+            <img
+              src={logo}
+              alt="AFAQ AI"
+              className="
+                w-[210px] sm:w-[270px] md:w-[330px] lg:w-[400px] xl:w-[450px]
+                select-none drop-shadow-[0_0_90px_rgba(79,40,183,.65)]
+              "
+            />
+          )}
 
           {/* Light sweep across the mark */}
           {!reduced && (
