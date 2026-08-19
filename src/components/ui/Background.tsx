@@ -220,16 +220,23 @@ const Background = () => {
 
       {/* 3 ─ Perspective floor grid. A real rotateX projection with its own
              vanishing point: the strongest depth cue in the stack, held at
-             very low opacity so it reads as structure, not decoration. --- */}
+             very low opacity so it reads as structure, not decoration.
+
+             Mobile: the drift (`.atmos-floor`'s `animation`) is dropped, but
+             the 74deg tilt is set explicitly as a static `transform` here —
+             that tilt only exists inside the animation's own keyframes, so
+             simply omitting the class would flatten the grid to 2D instead
+             of just stopping its drift. Desktop is unaffected. -------------- */}
       <div
         className="absolute inset-x-0 bottom-0 h-[58%] [perspective:520px] [perspective-origin:50%_0%]"
         style={par(8)}
       >
         <div
-          className="atmos-floor absolute inset-0 origin-top opacity-[0.16]"
+          className={isMobile ? "absolute inset-0 origin-top opacity-[0.16]" : "atmos-floor absolute inset-0 origin-top opacity-[0.16]"}
           style={
             {
               "--floor-dur": "30s",
+              transform: isMobile ? "rotateX(74deg)" : undefined,
               backgroundImage:
                 "linear-gradient(rgba(164,124,237,.5) 1px, transparent 1px), linear-gradient(90deg, rgba(164,124,237,.5) 1px, transparent 1px)",
               backgroundSize: "92px 92px",
@@ -244,14 +251,18 @@ const Background = () => {
 
       {/* 4 ─ Volumetric key light. Sits behind the hero mark; centred on
              mobile, shifted into the second grid column from lg up. This is
-             what makes the centre brighter than the edges. --------------- */}
+             what makes the centre brighter than the edges.
+
+             Mobile: the slow opacity breathe is dropped (no `atmos-keylight`
+             class, so no `animation`); the div has no other opacity set, so
+             it renders at the animation's own peak (opacity 1) — a static
+             "fully lit" core, not a dimmed one. Desktop is unaffected. ----- */}
       <div
-        className="
-          atmos-keylight absolute
-          left-1/2 top-[26%] h-[620px] w-[620px]
-          -translate-x-1/2 -translate-y-1/2
-          lg:left-[68%] lg:top-[46%] lg:h-[1080px] lg:w-[1080px]
-        "
+        className={
+          isMobile
+            ? "absolute left-1/2 top-[26%] h-[620px] w-[620px] -translate-x-1/2 -translate-y-1/2 lg:left-[68%] lg:top-[46%] lg:h-[1080px] lg:w-[1080px]"
+            : "atmos-keylight absolute left-1/2 top-[26%] h-[620px] w-[620px] -translate-x-1/2 -translate-y-1/2 lg:left-[68%] lg:top-[46%] lg:h-[1080px] lg:w-[1080px]"
+        }
         style={{
           background:
             "radial-gradient(circle, rgba(164,124,237,.20) 0%, rgba(117,73,216,.13) 26%, rgba(79,40,183,.06) 48%, transparent 70%)",
@@ -298,11 +309,16 @@ const Background = () => {
               transform: `rotate(${ray.rot}deg)`,
             }}
           >
+            {/* Mobile: the drift is dropped (no `atmos-ray` class). That
+                class carries no opacity of its own outside the animation, so
+                an explicit resting value (the animation's own midpoint) is
+                set here to avoid it defaulting to a brighter opacity:1. */}
             <div
-              className="atmos-ray absolute inset-0"
+              className={isMobile ? "absolute inset-0" : "atmos-ray absolute inset-0"}
               style={
                 {
                   "--ray-dur": `${ray.dur}s`,
+                  opacity: isMobile ? 0.75 : undefined,
                   background: beam,
                   maskImage: beamMask,
                   WebkitMaskImage: beamMask,
@@ -314,7 +330,14 @@ const Background = () => {
       </div>
 
       {/* 7 ─ Fog. Oversized so the drift is a pure translate of an already
-             rasterised layer. ------------------------------------------- */}
+             rasterised layer.
+
+             Mobile: not rendered at all. It's the most purely decorative
+             layer in the stack (a slow drifting haze with no other role —
+             see the depth-stack comment at the top of this file), so it's
+             removed rather than frozen, which additionally saves the paint
+             cost of two full-viewport gradient layers. Desktop unaffected. */}
+      {!isMobile && (
       <div
         className="absolute inset-x-0 bottom-0 h-[58vh] overflow-hidden"
         style={par(30)}
@@ -340,13 +363,16 @@ const Background = () => {
           }
         />
       </div>
+      )}
 
-      {/* 8 ─ Far dust ------------------------------------------------------ */}
+      {/* 8 ─ Far dust. Mobile: the twinkle is dropped (no `atmos-star` class);
+             its own resting opacity is already set inline below, so nothing
+             else needs to change. ------------------------------------------ */}
       <div className="absolute inset-0" style={par(7)}>
         {dust.map((p, i) => (
           <span
             key={i}
-            className="atmos-star absolute rounded-full bg-violet-200"
+            className={isMobile ? "absolute rounded-full bg-violet-200" : "atmos-star absolute rounded-full bg-violet-200"}
             style={
               {
                 left: `${p.x}%`,
@@ -362,18 +388,22 @@ const Background = () => {
         ))}
       </div>
 
-      {/* 9 ─ Mid-field stars ---------------------------------------------- */}
+      {/* 9 ─ Mid-field stars. Mobile: twinkle dropped; this class carries no
+             opacity outside the animation, so a resting value (the
+             animation's own midpoint) is set explicitly to avoid it
+             defaulting to a brighter opacity:1. ---------------------------- */}
       <div className="absolute inset-0" style={par(15)}>
         {stars.map((star, i) => (
           <span
             key={i}
-            className="atmos-star absolute rounded-full bg-white"
+            className={isMobile ? "absolute rounded-full bg-white" : "atmos-star absolute rounded-full bg-white"}
             style={
               {
                 left: `${star.x}%`,
                 top: `${star.y}%`,
                 width: star.s,
                 height: star.s,
+                opacity: isMobile ? 0.5 : undefined,
                 "--star-dur": `${star.d}s`,
                 "--star-delay": `${star.delay}s`,
                 boxShadow: "0 0 6px rgba(245,242,249,.9)",
@@ -384,12 +414,14 @@ const Background = () => {
       </div>
 
       {/* 10 ─ Near motes. Largest parallax, so they separate hardest from the
-              far field. Gradient discs rather than blurred dots. --------- */}
+              far field. Gradient discs rather than blurred dots.
+
+              Mobile: breathe dropped; same resting-opacity note as stars. */}
       <div className="absolute inset-0" style={par(38)}>
         {motes.map((m, i) => (
           <span
             key={i}
-            className="atmos-orb absolute rounded-full"
+            className={isMobile ? "absolute rounded-full" : "atmos-orb absolute rounded-full"}
             style={
               {
                 left: `${m.x}%`,
@@ -398,6 +430,7 @@ const Background = () => {
                 height: m.s,
                 marginLeft: -m.s / 2,
                 marginTop: -m.s / 2,
+                opacity: isMobile ? 0.35 : undefined,
                 "--orb-dur": `${m.d}s`,
                 "--orb-delay": `${m.delay}s`,
                 background:
@@ -410,7 +443,16 @@ const Background = () => {
 
       {/* 11 ─ Specular sweep. One very slow, very low-contrast band of light
               travelling across the frame — the "screen reflection" pass that
-              keeps the composition from ever looking frozen. ------------- */}
+              keeps the composition from ever looking frozen.
+
+              Mobile: not rendered. Its own -14deg rotation lives only in the
+              animation (the sheen-drift keyframes fully replace `transform`
+              while running), so simply dropping `.atmos-sheen`'s animation
+              would suddenly reveal a static rotated stripe that was never
+              actually visible before — a real visual regression, not a
+              faithful "frozen" version of this layer. Removing it entirely
+              is the correct static equivalent. Desktop is unaffected. ----- */}
+      {!isMobile && (
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div
           className="atmos-sheen absolute -inset-y-[30%] left-[-25%] w-[150%] origin-center"
@@ -424,6 +466,7 @@ const Background = () => {
           }
         />
       </div>
+      )}
 
       {/* 12 ─ Vignette. Static, unblurred; darkens the far edges so the centre
               reads as the lit part of the room. -------------------------- */}

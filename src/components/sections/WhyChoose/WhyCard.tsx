@@ -67,25 +67,27 @@ const WhyCard = ({ feature, index }: WhyCardProps) => {
       ref={ref}
       onPointerMove={handlePointerMove}
       className="group relative h-full"
+      // Mobile: no initial/whileInView/viewport at all — no observer, no
+      // animation subscription. Desktop keeps the original entrance exactly.
       initial={
-        reduced
+        isMobile
+          ? undefined
+          : reduced
           ? { opacity: 0 }
-          : isMobile
-          ? { opacity: 0, y: 14 }
           : { opacity: 0, y: 24, filter: "blur(7px)" }
       }
       whileInView={
-        reduced
+        isMobile
+          ? undefined
+          : reduced
           ? { opacity: 1 }
-          : isMobile
-          ? { opacity: 1, y: 0 }
           : { opacity: 1, y: 0, filter: "blur(0px)" }
       }
-      viewport={{ once: true, margin: isMobile ? "0px 0px 100px 0px" : "-70px" }}
+      viewport={isMobile ? undefined : { once: true, margin: "-70px" }}
       whileHover={reduced ? undefined : { y: lift }}
       transition={{
-        duration: reduced ? 0.3 : isMobile ? 0.25 : 0.68,
-        delay: reduced ? 0 : isMobile ? index * 0.02 : index * 0.07,
+        duration: reduced ? 0.3 : 0.68,
+        delay: reduced ? 0 : index * 0.07,
         ease: EASE_OUT_QUINT,
         y: { duration: 0.42, ease: EASE_OUT_EXPO },
       }}

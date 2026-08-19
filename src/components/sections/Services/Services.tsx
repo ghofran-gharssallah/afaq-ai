@@ -47,33 +47,26 @@ const Services = () => {
   const openService = useCallback((service: Service) => setActive(service), []);
   const closeService = useCallback(() => setActive(null), []);
 
-  const reveal = (delay: number) => ({
-    initial:
-      reduced
-        ? { opacity: 0 }
-        : isMobile
-        ? { opacity: 0, y: 14 }
-        : { opacity: 0, y: 22, filter: "blur(8px)" },
-    whileInView:
-      reduced
+  // Mobile: no reveal at all — no initial/whileInView/viewport/transition
+  // props, so Framer never creates an IntersectionObserver or animation
+  // subscription for these elements. Content renders directly in its final
+  // state. Desktop keeps the exact original entrance animation.
+  const reveal = (delay: number) => {
+    if (isMobile) return {};
+
+    return {
+      initial: reduced ? { opacity: 0 } : { opacity: 0, y: 22, filter: "blur(8px)" },
+      whileInView: reduced
         ? { opacity: 1 }
-        : isMobile
-        ? { opacity: 1, y: 0 }
         : { opacity: 1, y: 0, filter: "blur(0px)" },
-    // Mobile: a positive bottom margin starts the reveal while the element
-    // is still approaching from below, instead of waiting for it to travel
-    // 80px into the viewport first — that wait was reading as "the content
-    // is late." Desktop keeps the exact original trigger point.
-    viewport: {
-      once: true,
-      margin: isMobile ? "0px 0px 100px 0px" : "-80px",
-    } as const,
-    transition: {
-      duration: reduced ? 0.3 : isMobile ? 0.27 : 0.7,
-      delay: reduced ? 0 : isMobile ? delay * 0.3 : delay,
-      ease: EASE_OUT_QUINT,
-    },
-  });
+      viewport: { once: true, margin: "-80px" } as const,
+      transition: {
+        duration: reduced ? 0.3 : 0.7,
+        delay: reduced ? 0 : delay,
+        ease: EASE_OUT_QUINT,
+      },
+    };
+  };
 
   return (
     <section

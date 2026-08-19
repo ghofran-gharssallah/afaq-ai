@@ -104,31 +104,26 @@ const Footer = () => {
   const isMobile = useIsMobile();
   const socials = SOCIALS.filter((s) => s.href);
 
-  const reveal = (delay: number) => ({
-    initial:
-      reduced
-        ? { opacity: 0 }
-        : isMobile
-        ? { opacity: 0, y: 12 }
-        : { opacity: 0, y: 20, filter: "blur(6px)" },
-    whileInView:
-      reduced
+  // Mobile: no reveal at all — no initial/whileInView/viewport/transition
+  // props, so Framer never creates an IntersectionObserver or animation
+  // subscription for these elements. Content renders directly in its final
+  // state. Desktop keeps the exact original entrance animation.
+  const reveal = (delay: number) => {
+    if (isMobile) return {};
+
+    return {
+      initial: reduced ? { opacity: 0 } : { opacity: 0, y: 20, filter: "blur(6px)" },
+      whileInView: reduced
         ? { opacity: 1 }
-        : isMobile
-        ? { opacity: 1, y: 0 }
         : { opacity: 1, y: 0, filter: "blur(0px)" },
-    // Mobile: reveal starts as the element approaches from below rather than
-    // after it has already travelled 70px into view. Desktop is unchanged.
-    viewport: {
-      once: true,
-      margin: isMobile ? "0px 0px 100px 0px" : "-70px",
-    } as const,
-    transition: {
-      duration: reduced ? 0.3 : isMobile ? 0.24 : 0.6,
-      delay: reduced ? 0 : isMobile ? delay * 0.3 : delay,
-      ease: EASE_OUT_QUINT,
-    },
-  });
+      viewport: { once: true, margin: "-70px" } as const,
+      transition: {
+        duration: reduced ? 0.3 : 0.6,
+        delay: reduced ? 0 : delay,
+        ease: EASE_OUT_QUINT,
+      },
+    };
+  };
 
   return (
     <footer className="relative overflow-hidden pt-[clamp(88px,11vw,150px)]">

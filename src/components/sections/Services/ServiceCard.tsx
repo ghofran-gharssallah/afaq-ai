@@ -72,25 +72,30 @@ const ServiceCard = ({ service, index, onOpen }: ServiceCardProps) => {
       ref={ref}
       onPointerMove={handlePointerMove}
       className="group relative h-full min-h-[236px] lg:min-h-[252px]"
+      // Mobile: no initial/whileInView/viewport props at all — no
+      // IntersectionObserver, no animation subscription, content renders
+      // directly in its final visible state. Desktop keeps the exact
+      // original entrance animation. whileHover is left as-is; it never
+      // fires on a touch device.
       initial={
-        reduced
+        isMobile
+          ? undefined
+          : reduced
           ? { opacity: 0 }
-          : isMobile
-          ? { opacity: 0, y: 16 }
           : { opacity: 0, y: 26, filter: "blur(7px)" }
       }
       whileInView={
-        reduced
+        isMobile
+          ? undefined
+          : reduced
           ? { opacity: 1 }
-          : isMobile
-          ? { opacity: 1, y: 0 }
           : { opacity: 1, y: 0, filter: "blur(0px)" }
       }
-      viewport={{ once: true, margin: isMobile ? "0px 0px 100px 0px" : "-70px" }}
+      viewport={isMobile ? undefined : { once: true, margin: "-70px" }}
       whileHover={reduced ? undefined : { y: -7, scale: 1.018 }}
       transition={{
-        duration: reduced ? 0.3 : isMobile ? 0.25 : 0.68,
-        delay: reduced ? 0 : isMobile ? index * 0.02 : index * 0.07,
+        duration: reduced ? 0.3 : 0.68,
+        delay: reduced ? 0 : index * 0.07,
         ease: EASE_OUT_QUINT,
         y: { duration: 0.44, ease: EASE_OUT_EXPO },
         scale: { duration: 0.44, ease: EASE_OUT_EXPO },

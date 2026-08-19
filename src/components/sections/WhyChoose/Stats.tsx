@@ -62,23 +62,25 @@ const Stats = () => {
         bg-white/[0.03] backdrop-blur-xl max-sm:backdrop-blur-md
         shadow-[0_14px_44px_rgba(6,4,18,.36)]
       "
+      // Mobile: no initial/whileInView/viewport at all — no observer, no
+      // animation subscription. Desktop keeps the original entrance exactly.
       initial={
-        reduced
+        isMobile
+          ? undefined
+          : reduced
           ? { opacity: 0 }
-          : isMobile
-          ? { opacity: 0, y: 14 }
           : { opacity: 0, y: 26, filter: "blur(8px)" }
       }
       whileInView={
-        reduced
+        isMobile
+          ? undefined
+          : reduced
           ? { opacity: 1 }
-          : isMobile
-          ? { opacity: 1, y: 0 }
           : { opacity: 1, y: 0, filter: "blur(0px)" }
       }
-      viewport={{ once: true, margin: isMobile ? "0px 0px 100px 0px" : "-70px" }}
+      viewport={isMobile ? undefined : { once: true, margin: "-70px" }}
       transition={{
-        duration: reduced ? 0.3 : isMobile ? 0.27 : 0.75,
+        duration: reduced ? 0.3 : 0.75,
         ease: EASE_OUT_EXPO,
       }}
     >

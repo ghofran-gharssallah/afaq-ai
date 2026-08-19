@@ -136,25 +136,27 @@ const TechnologyCard = ({ tech, index }: TechnologyCardProps) => {
       ref={ref}
       onPointerMove={handlePointerMove}
       className="group relative h-[128px] sm:h-[140px] lg:h-[148px]"
+      // Mobile: no initial/whileInView/viewport at all — no observer, no
+      // animation subscription. Desktop keeps the original entrance exactly.
       initial={
-        reduced
+        isMobile
+          ? undefined
+          : reduced
           ? { opacity: 0 }
-          : isMobile
-          ? { opacity: 0, y: 10 }
           : { opacity: 0, y: 18, filter: "blur(6px)" }
       }
       whileInView={
-        reduced
+        isMobile
+          ? undefined
+          : reduced
           ? { opacity: 1 }
-          : isMobile
-          ? { opacity: 1, y: 0 }
           : { opacity: 1, y: 0, filter: "blur(0px)" }
       }
-      viewport={{ once: true, margin: isMobile ? "0px 0px 100px 0px" : "-60px" }}
+      viewport={isMobile ? undefined : { once: true, margin: "-60px" }}
       whileHover={reduced ? undefined : { y: -6, scale: 1.025 }}
       transition={{
-        duration: reduced ? 0.3 : isMobile ? 0.24 : 0.62,
-        delay: reduced ? 0 : isMobile ? index * 0.015 : index * 0.055,
+        duration: reduced ? 0.3 : 0.62,
+        delay: reduced ? 0 : index * 0.055,
         ease: EASE_OUT_QUINT,
         y: { duration: 0.42, ease: EASE_OUT_EXPO },
         scale: { duration: 0.42, ease: EASE_OUT_EXPO },

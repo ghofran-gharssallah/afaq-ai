@@ -148,25 +148,27 @@ const ProjectCard = ({ project, index, onOpen }: ProjectCardProps) => {
       ref={ref}
       onPointerMove={handlePointerMove}
       className="group relative"
+      // Mobile: no initial/whileInView/viewport at all — no observer, no
+      // animation subscription. Desktop keeps the original entrance exactly.
       initial={
-        reduced
+        isMobile
+          ? undefined
+          : reduced
           ? { opacity: 0 }
-          : isMobile
-          ? { opacity: 0, y: 16 }
           : { opacity: 0, y: 30, filter: "blur(8px)" }
       }
       whileInView={
-        reduced
+        isMobile
+          ? undefined
+          : reduced
           ? { opacity: 1 }
-          : isMobile
-          ? { opacity: 1, y: 0 }
           : { opacity: 1, y: 0, filter: "blur(0px)" }
       }
-      viewport={{ once: true, margin: isMobile ? "0px 0px 100px 0px" : "-80px" }}
+      viewport={isMobile ? undefined : { once: true, margin: "-80px" }}
       whileHover={reduced ? undefined : { y: -6 }}
       transition={{
-        duration: reduced ? 0.3 : isMobile ? 0.27 : 0.75,
-        delay: reduced ? 0 : isMobile ? index * 0.035 : index * 0.12,
+        duration: reduced ? 0.3 : 0.75,
+        delay: reduced ? 0 : index * 0.12,
         ease: EASE_OUT_QUINT,
         y: { duration: 0.45, ease: EASE_OUT_EXPO },
       }}

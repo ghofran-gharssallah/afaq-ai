@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 
 import logo from "../../../assets/logo/logo.png";
 import { EASE_OUT_EXPO, EASE_OUT_QUINT, IDLE } from "../../../constants/motion";
+import { useIsMobile } from "../../../hooks/useIsMobile";
 
 /**
  * Reference timings for the navbar mark:
@@ -33,6 +34,14 @@ const logoMask: React.CSSProperties = {
 
 const Logo = () => {
   const reduced = useReducedMotion();
+  // Same 640px reveal-timing breakpoint every scroll-reveal in the app uses.
+  // On mobile: no entrance animation and none of the three continuous
+  // `repeat: Infinity` idle loops below (float, breathe, light-sweep) run —
+  // their `animate` props are simply not passed, so there's no rAF-driven
+  // Framer subscription for them. Desktop (>=640px, including the tablet
+  // range where this same component renders inside MobileMenu) is
+  // completely unaffected.
+  const isMobile = useIsMobile();
 
   // Tracked on the link rather than via whileHover on the image, so hovering
   // anywhere in the logo group (mark, side lines, wordmark) drives the scale —
@@ -113,8 +122,8 @@ const Logo = () => {
 
             group-hover:w-[96px]
           "
-          initial={reduced ? { opacity: 0 } : { opacity: 0, scaleX: 0 }}
-          animate={reduced ? { opacity: 1 } : { opacity: 1, scaleX: 1 }}
+          initial={isMobile ? undefined : reduced ? { opacity: 0 } : { opacity: 0, scaleX: 0 }}
+          animate={isMobile ? undefined : reduced ? { opacity: 1 } : { opacity: 1, scaleX: 1 }}
           transition={{
             duration: reduced ? 0.3 : 0.6,
             delay: reduced ? 0 : LINES_IN,
@@ -125,9 +134,17 @@ const Logo = () => {
         {/* Logo — entrance + idle float */}
         <motion.div
           className="relative"
-          initial={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.7, y: -6 }}
+          initial={
+            isMobile
+              ? undefined
+              : reduced
+              ? { opacity: 0 }
+              : { opacity: 0, scale: 0.7, y: -6 }
+          }
           animate={
-            reduced
+            isMobile
+              ? undefined
+              : reduced
               ? { opacity: 1 }
               : { opacity: 1, scale: 1, y: [0, -3, 0] }
           }
@@ -151,7 +168,7 @@ const Logo = () => {
               Scale never affects layout, so nothing else in the navbar moves. */}
           <motion.div
             className="relative"
-            animate={reduced ? { scale: 1 } : { scale: [1, 1.045, 1] }}
+            animate={reduced || isMobile ? undefined : { scale: [1, 1.045, 1] }}
             transition={
               reduced
                 ? { duration: 0 }
@@ -181,7 +198,7 @@ const Logo = () => {
             />
 
             {/* Light Sweep */}
-            {!reduced && (
+            {!reduced && !isMobile && (
               <div
                 className="pointer-events-none absolute inset-0 overflow-hidden"
                 style={logoMask}
@@ -265,8 +282,8 @@ const Logo = () => {
           transition-all
           duration-300
         "
-        initial={reduced ? { opacity: 0 } : { opacity: 0, y: 6 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial={isMobile ? undefined : reduced ? { opacity: 0 } : { opacity: 0, y: 6 }}
+        animate={isMobile ? undefined : { opacity: 1, y: 0 }}
         transition={{
           duration: reduced ? 0.3 : 0.6,
           delay: reduced ? 0 : WORDMARK_IN,

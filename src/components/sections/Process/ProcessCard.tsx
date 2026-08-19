@@ -67,25 +67,27 @@ const ProcessCard = ({ step, index, side }: ProcessCardProps) => {
       ref={ref}
       onPointerMove={handlePointerMove}
       className="group relative"
+      // Mobile: no initial/whileInView/viewport at all — no observer, no
+      // animation subscription. Desktop keeps the original entrance exactly.
       initial={
-        reduced
+        isMobile
+          ? undefined
+          : reduced
           ? { opacity: 0 }
-          : isMobile
-          ? { opacity: 0, y: 16, x: side === "left" ? 8 : -8 }
           : { opacity: 0, y: 26, x: side === "left" ? 14 : -14, filter: "blur(7px)" }
       }
       whileInView={
-        reduced
+        isMobile
+          ? undefined
+          : reduced
           ? { opacity: 1 }
-          : isMobile
-          ? { opacity: 1, y: 0, x: 0 }
           : { opacity: 1, y: 0, x: 0, filter: "blur(0px)" }
       }
-      viewport={{ once: true, margin: isMobile ? "0px 0px 100px 0px" : "-80px" }}
+      viewport={isMobile ? undefined : { once: true, margin: "-80px" }}
       whileHover={reduced ? undefined : { y: -6 }}
       transition={{
-        duration: reduced ? 0.3 : isMobile ? 0.27 : 0.7,
-        delay: reduced ? 0 : isMobile ? index * 0.015 : index * 0.05,
+        duration: reduced ? 0.3 : 0.7,
+        delay: reduced ? 0 : index * 0.05,
         ease: EASE_OUT_QUINT,
         y: { duration: 0.42, ease: EASE_OUT_EXPO },
       }}

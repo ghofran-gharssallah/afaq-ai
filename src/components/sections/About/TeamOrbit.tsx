@@ -34,22 +34,18 @@ const Core = () => {
   // app already keys its mobile duration/margin off.
   const isMobile = useIsMobile();
 
+  // Mobile: no reveal (no initial/whileInView/viewport) and the three
+  // continuous `repeat: Infinity` loops below (two rotating arcs, one
+  // floating mark) don't run at all — `animate` is simply not passed, so
+  // there is no rAF-driven Framer subscription for them on mobile. Desktop
+  // is completely untouched.
   return (
     <motion.div
       className="relative flex items-center justify-center"
-      initial={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.86 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      // Mobile: reveal starts as the element approaches from below rather
-      // than after it has already travelled 80px into view; desktop keeps
-      // its exact original trigger point and duration.
-      viewport={{
-        once: true,
-        margin: isMobile ? "0px 0px 100px 0px" : "-80px",
-      }}
-      transition={{
-        duration: reduced ? 0.3 : isMobile ? 0.3 : 0.9,
-        ease: EASE_OUT_EXPO,
-      }}
+      initial={isMobile ? undefined : reduced ? { opacity: 0 } : { opacity: 0, scale: 0.86 }}
+      whileInView={isMobile ? undefined : { opacity: 1, scale: 1 }}
+      viewport={isMobile ? undefined : { once: true, margin: "-80px" }}
+      transition={{ duration: reduced ? 0.3 : 0.9, ease: EASE_OUT_EXPO }}
     >
       <div className="relative h-[190px] w-[190px] lg:h-[230px] lg:w-[230px]">
         {/* Volumetric core glow */}
@@ -70,7 +66,7 @@ const Core = () => {
         >
           <motion.g
             style={{ transformOrigin: "120px 120px" }}
-            animate={reduced ? undefined : { rotate: 360 }}
+            animate={reduced || isMobile ? undefined : { rotate: 360 }}
             transition={{ duration: 46, repeat: Infinity, ease: "linear" }}
           >
             <ellipse
@@ -87,7 +83,7 @@ const Core = () => {
 
           <motion.g
             style={{ transformOrigin: "120px 120px" }}
-            animate={reduced ? undefined : { rotate: -360 }}
+            animate={reduced || isMobile ? undefined : { rotate: -360 }}
             transition={{ duration: 62, repeat: Infinity, ease: "linear" }}
           >
             <ellipse
@@ -110,7 +106,7 @@ const Core = () => {
           aria-hidden
           className="absolute left-1/2 top-1/2 w-[96px] -translate-x-1/2 -translate-y-1/2 select-none lg:w-[118px]"
           style={{ filter: "drop-shadow(0 0 34px rgba(79,40,183,.55))" }}
-          animate={reduced ? undefined : { y: [0, -7, 0] }}
+          animate={reduced || isMobile ? undefined : { y: [0, -7, 0] }}
           transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
         />
       </div>
