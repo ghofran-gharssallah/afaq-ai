@@ -66,9 +66,17 @@ const MobileMenu = () => {
         covers the hamburger button and spacer on narrow viewports. It was
         silently winning every click meant for the button beneath it.
         pointer-events-none here (mobile only — the desktop instance is a
-        separate, non-overlapping element and is untouched) removes it from
-        hit-testing so clicks fall through to the button/spacer; "Home" is
-        still reachable from the first link in the panel this opens.
+        separate, non-overlapping element and is untouched) removes the
+        whole row from hit-testing so clicks fall through to the
+        button/spacer beneath it.
+
+        `markOnlyClickable` then re-enables hit-testing on just the mark
+        image itself (pointer-events is inherited, so one descendant can
+        opt back in without affecting its siblings) — the side lines and
+        wordmark stay excluded, so the hamburger's and spacer's hit areas
+        are never touched. Tapping the mark still navigates Home, same as
+        the desktop instance: it's the same shared `<Link>`, just with a
+        smaller region of it able to originate the click.
       */}
       <div
         className="
@@ -88,7 +96,7 @@ const MobileMenu = () => {
             that same overlap). Shrinking the whole mark keeps its exact
             design and centering, just smaller, so it clears both sides. */}
         <div className="scale-[0.6] origin-center lg:scale-100">
-          <Logo />
+          <Logo markOnlyClickable />
         </div>
       </div>
 

@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import logo from "../../../assets/logo/logo.png";
 import { EASE_OUT_EXPO, EASE_OUT_QUINT, IDLE } from "../../../constants/motion";
@@ -32,7 +32,28 @@ const logoMask: React.CSSProperties = {
   maskPosition: "center",
 };
 
-const Logo = () => {
+interface LogoProps {
+  /**
+   * Set only by MobileMenu's decorative overlay instance, which sits inside
+   * an ancestor `pointer-events-none` wrapper (that wrapper exists because
+   * this component's full row — side lines + wordmark, not just the mark —
+   * is wide enough to geometrically cover the hamburger button on narrow
+   * screens; see the comment at that call site for the original bug).
+   *
+   * `pointer-events` is inherited, so setting it back to `auto` on one
+   * specific descendant re-enables hit-testing for THAT element only, while
+   * everything around it (the lines, the wordmark) stays excluded and the
+   * hamburger stays reachable. A click landing there still bubbles up
+   * through the DOM to this component's own `<Link>` exactly as normal —
+   * pointer-events only govern hit-testing, not event propagation — so no
+   * navigation logic needs to change, only which pixels can originate the
+   * click. Desktop's call site passes nothing, so this prop is always
+   * `undefined` there and the rendered output is byte-for-byte unchanged.
+   */
+  markOnlyClickable?: boolean;
+}
+
+const Logo = ({ markOnlyClickable = false }: LogoProps = {}) => {
   const reduced = useReducedMotion();
   // Same 640px reveal-timing breakpoint every scroll-reveal in the app uses.
   // On mobile: no entrance animation and none of the three continuous
@@ -48,9 +69,27 @@ const Logo = () => {
   // matching the group-hover behaviour the glow already uses.
   const [hovered, setHovered] = useState(false);
 
+  const { pathname } = useLocation();
+
+  /**
+   * A `<Link to="/">` clicked while already on "/" is a no-op navigation —
+   * the pathname doesn't change, so ScrollManager's route-change effect
+   * never re-runs and the page simply doesn't scroll. This covers that one
+   * case explicitly, matching the same smooth/reduced-motion-aware scroll
+   * the footer's own "Back to top" button already uses. When navigating
+   * from a different page, Link's normal navigation plus ScrollManager's
+   * existing top-of-page reset already do the right thing untouched.
+   */
+  const handleClick = useCallback(() => {
+    if (pathname === "/") {
+      window.scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" });
+    }
+  }, [pathname, reduced]);
+
   return (
     <Link
       to="/"
+      onClick={handleClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onFocus={() => setHovered(true)}
@@ -181,7 +220,7 @@ const Logo = () => {
             }
           >
             <motion.div
-              className="relative"
+              className={markOnlyClickable ? "relative pointer-events-auto" : "relative"}
               animate={{ scale: hovered && !reduced ? 1.2 : 1 }}
               transition={{ duration: 0.5, ease: EASE_OUT_EXPO }}
             >
