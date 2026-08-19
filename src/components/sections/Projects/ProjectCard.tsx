@@ -165,8 +165,8 @@ const ProjectCard = ({ project, index, onOpen }: ProjectCardProps) => {
       viewport={{ once: true, margin: "-80px" }}
       whileHover={reduced ? undefined : { y: -6 }}
       transition={{
-        duration: reduced ? 0.3 : isMobile ? 0.45 : 0.75,
-        delay: reduced ? 0 : isMobile ? index * 0.06 : index * 0.12,
+        duration: reduced ? 0.3 : isMobile ? 0.27 : 0.75,
+        delay: reduced ? 0 : isMobile ? index * 0.035 : index * 0.12,
         ease: EASE_OUT_QUINT,
         y: { duration: 0.45, ease: EASE_OUT_EXPO },
       }}

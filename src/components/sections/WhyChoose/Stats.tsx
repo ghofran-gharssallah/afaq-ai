@@ -78,7 +78,7 @@ const Stats = () => {
       }
       viewport={{ once: true, margin: "-70px" }}
       transition={{
-        duration: reduced ? 0.3 : isMobile ? 0.45 : 0.75,
+        duration: reduced ? 0.3 : isMobile ? 0.27 : 0.75,
         ease: EASE_OUT_EXPO,
       }}
     >

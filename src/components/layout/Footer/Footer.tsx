@@ -119,8 +119,8 @@ const Footer = () => {
         : { opacity: 1, y: 0, filter: "blur(0px)" },
     viewport: { once: true, margin: "-70px" } as const,
     transition: {
-      duration: reduced ? 0.3 : isMobile ? 0.4 : 0.6,
-      delay: reduced ? 0 : isMobile ? delay * 0.5 : delay,
+      duration: reduced ? 0.3 : isMobile ? 0.24 : 0.6,
+      delay: reduced ? 0 : isMobile ? delay * 0.3 : delay,
       ease: EASE_OUT_QUINT,
     },
   });

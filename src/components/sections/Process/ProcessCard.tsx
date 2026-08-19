@@ -84,8 +84,8 @@ const ProcessCard = ({ step, index, side }: ProcessCardProps) => {
       viewport={{ once: true, margin: "-80px" }}
       whileHover={reduced ? undefined : { y: -6 }}
       transition={{
-        duration: reduced ? 0.3 : isMobile ? 0.45 : 0.7,
-        delay: reduced ? 0 : isMobile ? index * 0.025 : index * 0.05,
+        duration: reduced ? 0.3 : isMobile ? 0.27 : 0.7,
+        delay: reduced ? 0 : isMobile ? index * 0.015 : index * 0.05,
         ease: EASE_OUT_QUINT,
         y: { duration: 0.42, ease: EASE_OUT_EXPO },
       }}

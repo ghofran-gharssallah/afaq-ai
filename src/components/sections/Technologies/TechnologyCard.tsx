@@ -153,8 +153,8 @@ const TechnologyCard = ({ tech, index }: TechnologyCardProps) => {
       viewport={{ once: true, margin: "-60px" }}
       whileHover={reduced ? undefined : { y: -6, scale: 1.025 }}
       transition={{
-        duration: reduced ? 0.3 : isMobile ? 0.4 : 0.62,
-        delay: reduced ? 0 : isMobile ? index * 0.025 : index * 0.055,
+        duration: reduced ? 0.3 : isMobile ? 0.24 : 0.62,
+        delay: reduced ? 0 : isMobile ? index * 0.015 : index * 0.055,
         ease: EASE_OUT_QUINT,
         y: { duration: 0.42, ease: EASE_OUT_EXPO },
         scale: { duration: 0.42, ease: EASE_OUT_EXPO },

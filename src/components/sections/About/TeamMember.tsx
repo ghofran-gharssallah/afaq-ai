@@ -133,8 +133,8 @@ const TeamMemberCard = ({ member, index, onOpen }: TeamMemberProps) => {
       viewport={{ once: true, margin: "-70px" }}
       whileHover={reduced ? undefined : { y: -6, scale: 1.02 }}
       transition={{
-        duration: reduced ? 0.3 : isMobile ? 0.42 : 0.68,
-        delay: reduced ? 0 : isMobile ? index * 0.04 : index * 0.08,
+        duration: reduced ? 0.3 : isMobile ? 0.25 : 0.68,
+        delay: reduced ? 0 : isMobile ? index * 0.025 : index * 0.08,
         ease: EASE_OUT_QUINT,
         y: { duration: 0.42, ease: EASE_OUT_EXPO },
         scale: { duration: 0.42, ease: EASE_OUT_EXPO },
